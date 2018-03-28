@@ -22,17 +22,58 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.core</artifactId>
+            <version>0.6.2.201302030002</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     
     <build>
-        <plugins>
-            <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <configuration>
-                 <mainClass>com.thekoalas.koalas.Koalas</mainClass>
-            </configuration>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <configuration>
+                        <mainClass>com.thekoalas.koalas.Koalas</mainClass>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.6.2.201302030002</version>
+                    <executions>
+                      <!-- prepare agent for measuring unit tests -->
+                      <execution>
+                        <id>prepare-unit-tests</id>
+                        <goals>
+                          <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                          <destFile>./report</destFile>
+                        </configuration>
+                      </execution>
+
+                      <!-- prepare agent for measuring integration tests -->
+                      <execution>
+                        <id>prepare-integration-tests</id>
+                        <goals>
+                          <goal>prepare-agent</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                          <destFile>./reportit</destFile>
+                          <propertyName>itCoverageAgent</propertyName>
+                        </configuration>
+                      </execution>
+                    </executions>
+                </plugin>
+                
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
