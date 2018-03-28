@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thekoalas.koalas;
 
 import java.util.ArrayList;
@@ -11,13 +6,16 @@ import java.util.ArrayList;
  *
  * @author medardt
  */
-public class Koalas {
 
-    /**
-     * @param args the command line arguments
-     */
+public abstract class Koalas {
+    
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+        System.out.println("Hello koalas !");
+    }
+    
+    public static String hello() {
+        return "Hello :D";
     }
 
 }
