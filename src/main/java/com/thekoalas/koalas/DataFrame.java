@@ -23,20 +23,18 @@ public class DataFrame implements IDataFrame {
     public DataFrame(List<String> names, List<List<? extends Comparable>> columns){
         
         boolean allEqual = true;
-        int sizeExpected = -1;
-        int sizeFound = -1;
         
         if(names.size() != columns.size()){
             System.out.println("The number of names is not equal to the number of values column. Aborting");
             return;
         }
         
-        if(names.size() == 0){
+        if(columns.isEmpty()){
             System.out.println("Trying to create an empty dataset. Aborting");
             return;
         }
         
-        sizeExpected = columns.get(0).size();
+        int sizeExpected = columns.get(0).size();
   
         for(int i = 0 ; i < columns.size() && allEqual;i++){
             allEqual = (columns.get(i).size() == sizeExpected);
@@ -64,12 +62,22 @@ public class DataFrame implements IDataFrame {
     }
 
     @Override
-    public String getNFirstLines(int nbLines) {
+    public String head(int nbLines) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String getNLastLines(int nbLines) {
+    public String head() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String tail(int nbLines) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String tail() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -82,5 +90,7 @@ public class DataFrame implements IDataFrame {
     public String getRowSubset(List<String> columnNames) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+  
 
 }

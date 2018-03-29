@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -21,27 +22,46 @@ public interface IDataFrame {
     public String getAll();
 
     /**
-     * Returns the content of the nbLines first lines.
-     * If there is not enough lines to display, display the maximum of lines possible.
+     * Returns the content of the nbLines first lines. If there is not enough
+     * lines to display, display the maximum of lines possible.
      *
      *
      * @param nbLines The numbers of lines that you want to display.
-     * @return The content of the nbLines first lines.
+     * @return The content of the nbLines first lines, if possible.
      */
-    public String getNFirstLines(int nbLines);
+    public String head(int nbLines);
 
     /**
-     * Returns the content of the nbLines last lines.
-     *If there is not enough lines to display, display the maximum of lines possible.
-     * 
-     * @param nbLines The numbers of lines that you want to display.
-     * @return The content of the nbLines first lines.
+     * Returns the content of the 5 first lines. If there is not enough lines to
+     * display, display the maximum of lines possible.
+     *
+     *
+     * @return The content of the 5 first lines, if possible.
      */
-    public String getNLastLines(int nbLines);
+    public String head();
+
+    /**
+     * Returns the content of the nbLines last lines. If there is not enough
+     * lines to display, display the maximum of lines possible.
+     *
+     *
+     * @param nbLines The numbers of lines that you want to display.
+     * @return The content of the nbLines last lines, if possible.
+     */
+    public String tail(int nbLines);
+
+    /**
+     * Returns the content of the 5 last lines. If there is not enough lines to
+     * display, display the maximum of lines possible.
+     *
+     *
+     * @return The content of the 5 last lines, if possible.
+     */
+    public String tail();
 
     /**
      * Returns the content of all the dataset from the index startIndex
-     * 
+     *
      * If the index is out of range : an exeption is raised (IndexOutOfBounds)
      *
      * @param startIndex The first index from where the data should be
@@ -51,15 +71,15 @@ public interface IDataFrame {
     public String getLineSubset(int startIndex);
 
     /**
-     * Returns the content of all lines from the row names specified in
-     * rowNames.
-     * 
+     * Returns the content of all lines from the column names specified in
+     * columnNames.
+     *
      * Invalid names can be provided, no warning will be displayed.
      *
-     * @param rowNames The name of the columns which should be displayed
-     * @return the content of all lines from the row names specified in
-     * rowNames.
+     * @param columnNames The name of the columns which should be displayed
+     * @return the content of all lines from the column names specified in
+     * columnNames.
      */
-    public String getRowSubset(List<String> rowNames);
+    public String getRowSubset(List<String> columnNames);
 
 }
