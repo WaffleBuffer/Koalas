@@ -6,6 +6,7 @@
 package com.thekoalas.koalas;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -37,5 +38,36 @@ public class Column<T extends Comparable<T>> {
     public void setData(List data) {
         this.data = data;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + Objects.hashCode(this.name);
+        hash = 53 * hash + Objects.hashCode(this.data);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Column<?> other = (Column<?>) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.data, other.data)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 
 }

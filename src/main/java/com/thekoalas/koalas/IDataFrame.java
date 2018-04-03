@@ -1,4 +1,3 @@
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -15,11 +14,11 @@ import java.util.List;
 public interface IDataFrame {
 
     /**
-     * Returns the content of all the dataset.
+     * Display the content of all the dataset.
      *
      * @return The content of all the dataset in String format.
      */
-    public String getAll();
+    public String display();
 
     /**
      * Returns the content of the nbLines first lines. If there is not enough
@@ -68,7 +67,7 @@ public interface IDataFrame {
      * displayed.
      * @return The content of all the dataset from the index startIndex.
      */
-    public String getLineSubset(int startIndex);
+    public DataFrame getLineSubset(int startIndex);
 
     /**
      * Returns the content of all lines from the column names specified in
@@ -80,6 +79,9 @@ public interface IDataFrame {
      * @return the content of all lines from the column names specified in
      * columnNames.
      */
-    public String getRowSubset(List<String> columnNames);
+    public DataFrame getColumnSubset(List<String> columnNames);
+    
+    
+    public String statistics();
 
 }
