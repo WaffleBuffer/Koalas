@@ -11,8 +11,14 @@ import com.thekoalas.koalas.DataFrame;
 import com.thekoalas.koalas.NameAlreadyDefinedException;
 import com.thekoalas.koalas.NoColumnsException;
 import com.thekoalas.koalas.NotAsMuchNamesAsColumnsException;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -553,9 +559,88 @@ public class DataFrameTest {
 
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    @Test (expected = IOException.class)
+    public void testDataFrameFromInvalidFile() throws IOException {
+        
+        DataFrame data = new DataFrame("");
+    }
+    
+    @Test (expected = NoColumnsException.class)
+    public void testDataFrameFromEmptyFile() throws IOException {
+        
+        String fileName = "testDataFrameFile.dat";
+        
+        final File testFile = new File(fileName);
+        if(testFile.exists()) {
+            testFile.delete();
+        }
+        
+        testFile.createNewFile();
+        
+        DataFrame data = new DataFrame(testFile.getName());
+    }
+    
+    @Test
+    public void testDataFrameFromCsvFile() throws IOException {
+        
+        String fileName = "testDataFrameFile.csv";
+        
+        final File testFile = new File(fileName);
+        if(testFile.exists()) {
+            testFile.delete();
+        }
+        
+        testFile.createNewFile();
+        
+        ArrayList<Column> list = new ArrayList<Column>();
+        
+        ArrayList<Integer> col1IntList = new ArrayList<Integer>();
+        col1IntList.add(2);
+        col1IntList.add(1);
+        
+        ArrayList<String> col2StringList = new ArrayList<String>();
+        col2StringList.add("Row1");
+        col2StringList.add("Row2");
+        
+        ArrayList<Date> col3DateList = new ArrayList<Date>();
+        col3DateList.add(new Date());
+        col3DateList.add(new Date(0));
+        
+        ArrayList<Double> col4DoubleList = new ArrayList<Double>();
+        col4DoubleList.add(52.06);
+        col4DoubleList.add(0.05);
+        
+        list.add(new Column("Ints", col1IntList));
+        list.add(new Column("Strings", col2StringList));
+        list.add(new Column("Dates", col3DateList));
+        list.add(new Column("Doubles", col4DoubleList));
+        
+        try (
+                PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+                ) {
+            
+            for(Column col : list) {
+                writer.print(col.getName() + ",");
+            }
+            writer.println();
+            
+            int j;
+            for(int i = 0; i < list.get(0).getData().size(); ++i) {
+                
+                for(j = 0; j < list.size(); ++j) {
+                    
+                    Column col = list.get(j);
+                    writer.print(col.getData().get(i).toString() + ",");
+                }
+                writer.println();
+            }
+            
+            writer.flush();
+            
+            DataFrame expectedData = new DataFrame(list);
+            DataFrame data = new DataFrame(fileName);
+            
+            assertEquals(expectedData, data);
+        }
+    }
 }

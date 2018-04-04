@@ -6,6 +6,7 @@
 package com.thekoalas.koalas;
 
 import com.opencsv.CSVReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -114,12 +115,24 @@ public class DataFrame implements IDataFrame {
     }
 
     public DataFrame(String filename) throws IOException {
+        
+        File file = new File(filename);
+        if(!file.exists()) {
+            throw new IOException("File doesn't exists");
+        }
+        
         ArrayList<Column> colList = new ArrayList<>();
         try (
                 Reader reader = Files.newBufferedReader(Paths.get(filename));
-                CSVReader csvReader = new CSVReader(reader);) {
+                CSVReader csvReader = new CSVReader(reader);
+            ) {
 
             List<String[]> records = csvReader.readAll();
+            
+            if(records.isEmpty()) {
+                throw new NoColumnsException("Empty file");
+            }
+            
             int expectedWidth = records.get(0).length;
             int expectedHeight = records.size();
             for (int i = 0; i < expectedWidth; i++) {
@@ -133,27 +146,28 @@ public class DataFrame implements IDataFrame {
                             currentType = Consts.doubleType;
                         }
                     }
+                    
+                    if (currentType == Consts.integerType) {
+                        try {
+                            Integer.parseInt(records.get(j)[i]);
+
+                        } catch (Exception e) {
+                            currentType = Consts.doubleType;
+                        }
+                    }
 
                     if (currentType == Consts.doubleType) {
                         try {
                             Double.parseDouble(records.get(j)[i]);
 
                         } catch (Exception e) {
-                            currentType = Consts.integerType;
-                        }
-                    }
-
-                    if (currentType == Consts.integerType) {
-                        try {
-                            Integer.parseInt(records.get(j)[i]);
-
-                        } catch (Exception e) {
                             currentType = Consts.stringType;
                         }
                     }
+                    
                 }
 
-                ArrayList values = new ArrayList<>();
+                ArrayList values;
                 switch (currentType) {
                     case Consts.dateType:
                         values = new ArrayList<Date>();
