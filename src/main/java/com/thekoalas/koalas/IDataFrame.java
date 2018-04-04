@@ -81,7 +81,19 @@ public interface IDataFrame {
      */
     public DataFrame getColumnSubset(List<String> columnNames);
     
-    
+    /**
+     * Display statistics about the Dataframe 
+     * @return The statistics in String format
+     */
     public String statistics();
+    
+    /**
+     * 
+     * @param colName The column where the group by has to be made
+     * @param function The function to apply (max, min, sum, avg)
+     * @return The statistics in String format
+     */
+    public String groupByAggregate(String colName, String function);
+   
 
 }
