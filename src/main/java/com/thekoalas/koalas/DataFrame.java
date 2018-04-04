@@ -5,10 +5,18 @@
  */
 package com.thekoalas.koalas;
 
+import com.opencsv.CSVReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  *
@@ -105,8 +113,91 @@ public class DataFrame implements IDataFrame {
         }
     }
 
-    public DataFrame(String filename) {
-        System.out.println("TODO : parse a CSV file");
+    public DataFrame(String filename) throws IOException {
+        ArrayList<Column> colList = new ArrayList<>();
+        try (
+                Reader reader = Files.newBufferedReader(Paths.get(filename));
+                CSVReader csvReader = new CSVReader(reader);) {
+
+            List<String[]> records = csvReader.readAll();
+            int expectedWidth = records.get(0).length;
+            int expectedHeight = records.size();
+            for (int i = 0; i < expectedWidth; i++) {
+                String name = records.get(0)[i];
+                int currentType = Consts.dateType;
+                for (int j = 1; j < expectedHeight && currentType > Consts.stringType; j++) {
+                    if (currentType == Consts.dateType) {
+                        try {
+                            Date.parse(records.get(j)[i]);
+                        } catch (Exception e) {
+                            currentType = Consts.doubleType;
+                        }
+                    }
+
+                    if (currentType == Consts.doubleType) {
+                        try {
+                            Double.parseDouble(records.get(j)[i]);
+
+                        } catch (Exception e) {
+                            currentType = Consts.integerType;
+                        }
+                    }
+
+                    if (currentType == Consts.integerType) {
+                        try {
+                            Integer.parseInt(records.get(j)[i]);
+
+                        } catch (Exception e) {
+                            currentType = Consts.stringType;
+                        }
+                    }
+                }
+
+                ArrayList values = new ArrayList<>();
+                switch (currentType) {
+                    case Consts.dateType:
+                        values = new ArrayList<Date>();
+                        break;
+
+                    case Consts.doubleType:
+                        values = new ArrayList<Double>();
+
+                        break;
+                    case Consts.integerType:
+                        values = new ArrayList<Integer>();
+                        break;
+                    default:
+                        values = new ArrayList<String>();
+                        break;
+                }
+
+                System.out.println("Current Type is : " + currentType);
+                for (int j = 1; j < expectedHeight; j++) {
+                    switch (currentType) {
+                        case Consts.dateType:
+                            values.add(Date.parse(records.get(j)[i]));
+                            break;
+
+                        case Consts.doubleType:
+                            values.add(Double.parseDouble(records.get(j)[i]));
+
+                            break;
+                        case Consts.integerType:
+                            values.add(Integer.parseInt(records.get(j)[i]));
+                            break;
+                        default:
+                            values.add(records.get(j)[i]);
+                            break;
+                    }
+
+                }
+
+                colList.add(new Column(name, values));
+
+            }
+
+        }
+        setDataset(colList);
 
     }
 
@@ -303,4 +394,107 @@ public class DataFrame implements IDataFrame {
         return sum;
     }
 
+    @Override
+    public String groupByAggregate(String colName, String function) {
+        int col = -1;
+        for (int i = 0; i < dataset.size() && col == -1; i++) {
+            if (colName.equals(dataset.get(i).getName())) {
+                col = i;
+
+            }
+
+        }
+        if (col == -1) {
+            return "col not found";
+        }
+        HashMap<String, ArrayList<Integer>> map = new HashMap<>();
+        List<Comparable> colValues = dataset.get(col).getData();
+        for (int i = 0; i < colValues.size(); i++) {
+            Comparable current = colValues.get(i);
+            String currentString = current.toString();
+            if (!map.containsKey(currentString)) {
+                ArrayList<Integer> list = new ArrayList<>();
+                list.add(i);
+                map.put(currentString, list);
+            } else {
+                ArrayList<Integer> list = map.get(currentString);
+                list.add(i);
+                map.put(currentString, list);
+            }
+
+        }
+        Set<String> set = map.keySet();
+        ArrayList<String> listGroup = new ArrayList<>(set);
+        switch (function) {
+            case "min":
+                //For each group, find minimum
+                for (int i = 0; i < listGroup.size(); i++) {
+                    ArrayList<Integer> list = map.get(listGroup.get(i));
+                    //Minimum for each column
+                    for (int j = 0; j < this.dataset.size(); j++) {
+                        Comparable min = (Comparable) this.dataset.get(j).getData().get(list.get(0));
+                        for (int k = 0; k < list.size(); k++) {
+                            Comparable value = (Comparable) this.dataset.get(j).getData().get(list.get(k));
+                            if (value.compareTo(min) < 0) {
+                                min = value;
+                            }
+                        }
+                        System.out.println("Group : " + listGroup.get(i) + " Column : " + this.dataset.get(j).getName() + " : min is " + min);
+                    }
+                }
+
+                break;
+            case "max":
+                for (int i = 0; i < listGroup.size(); i++) {
+                    ArrayList<Integer> list = map.get(listGroup.get(i));
+                    //Minimum for each column
+                    for (int j = 0; j < this.dataset.size(); j++) {
+                        Comparable max = (Comparable) this.dataset.get(j).getData().get(list.get(0));
+                        for (int k = 0; k < list.size(); k++) {
+                            Comparable value = (Comparable) this.dataset.get(j).getData().get(list.get(k));
+                            if (value.compareTo(max) > 0) {
+                                max = value;
+                            }
+                        }
+                        System.out.println("Group : " + listGroup.get(i) + " Column : " + this.dataset.get(j).getName() + " : max is " + max);
+                    }
+                }
+
+                break;
+
+            case "sum":
+                for (int i = 0; i < listGroup.size(); i++) {
+                    ArrayList<Integer> list = map.get(listGroup.get(i));
+                    for (int j = 0; j < this.dataset.size(); j++) {
+                        String name = this.dataset.get(j).getName();
+                        ArrayList<Comparable> values = new ArrayList<>();
+                        for (int k = 0; k < list.size(); k++) {
+                            values.add((Comparable) this.dataset.get(j).getData().get(list.get(k)));
+
+                        }
+                        Column colCreated = new Column(name, values);
+                        System.out.println("Group : " + listGroup.get(i) + " Column : " + this.dataset.get(j).getName() + " : sum is " + sum(colCreated));
+                    }
+                }
+                break;
+
+            case "avg":
+                for (int i = 0; i < listGroup.size(); i++) {
+                    ArrayList<Integer> list = map.get(listGroup.get(i));
+                    for (int j = 0; j < this.dataset.size(); j++) {
+                        String name = this.dataset.get(j).getName();
+                        ArrayList<Comparable> values = new ArrayList<>();
+                        for (int k = 0; k < list.size(); k++) {
+                            values.add((Comparable) this.dataset.get(j).getData().get(list.get(k)));
+
+                        }
+                        Column colCreated = new Column(name, values);
+                        System.out.println("Group : " + listGroup.get(i) + " Column : " + this.dataset.get(j).getName() + " : avg is " + sum(colCreated) / list.size());
+                    }
+                }
+                break;
+        }
+
+        return "";
+    }
 }

@@ -1,5 +1,6 @@
 package com.thekoalas.koalas;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  */
 public abstract class Koalas {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //Tests Naiqi/Benjamin, pour s'assurer que tout fonctionne correctement !
         //Créer un dataset à partir de colonnes.
 
@@ -28,9 +29,10 @@ public abstract class Koalas {
         col1.add(1);
         col1.add(2);
         col1.add(3);
-        col1.add(4);
+        col1.add(-1);
         col1.add(5);
         col1.add(6);
+        col1.add(-1);
         ArrayList<Integer> col2 = new ArrayList<>();
         col2.add(2);
         col2.add(2);
@@ -38,7 +40,9 @@ public abstract class Koalas {
         col2.add(2);
         col2.add(2);
         col2.add(2);
+        col2.add(1);
         ArrayList<String> col3 = new ArrayList<>();
+        col3.add("Coucou");
         col3.add("Coucou");
         col3.add("Coucou");
         col3.add("Coucou");
@@ -60,6 +64,11 @@ public abstract class Koalas {
         System.out.println("Hello koalas !");
         System.out.println(data);
         data.statistics();
+        
+        
+        DataFrame d = new DataFrame("test.csv");
+        System.out.println(d.groupByAggregate("country", "max"));
+        System.out.println(data.groupByAggregate("C", "avg"));
     }
 
     public static String hello() {
