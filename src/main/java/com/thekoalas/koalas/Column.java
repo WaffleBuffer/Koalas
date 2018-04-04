@@ -67,7 +67,4 @@ public class Column<T extends Comparable<T>> {
         }
         return true;
     }
-    
-    
-
 }

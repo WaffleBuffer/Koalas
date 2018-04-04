@@ -277,28 +277,45 @@ public class DataFrame implements IDataFrame {
                     max = values.get(j);
                 }
             }
-            double sum = sum(this.dataset.get(i));
+            
+            String sum = "(invalid type to sum)";
+            String mean = "(invlid type for mean)";
+            
+            if(!values.isEmpty()) {
+                if(values.get(0) instanceof Number) {
+                    Double sumRes = sumNbr(this.dataset.get(i));
+                    sum = Double.toString(sumRes);
+                    Double meanRes = sumRes / this.dataset.get(i).getData().size();
+                    mean = Double.toString(meanRes);
+                }
+                else if(values.get(0) instanceof String) {
+                    sum = sumStr(this.dataset.get(i));
+                }
+            }
 
-            System.out.println("Colonne " + this.dataset.get(i).getName() + " : minimum is  " + min + " maximum is " + max + " sum is " + sum + " mean is " + sum / this.dataset.get(i).getData().size());
+            retour += "Colonne " + this.dataset.get(i).getName() + " : minimum is " + min + " maximum is " + max + " sum is " + sum + " mean is " + mean + "\n";
+            //System.out.println("Colonne " + this.dataset.get(i).getName() + " : minimum is  " + min + " maximum is " + max + " sum is " + sum + " mean is " + sum / this.dataset.get(i).getData().size());
         }
 
         return retour;
     }
-
-    public double sum(Column col) {
+    
+    public double sumNbr(Column<? extends Number> col) {
         double sum = 0;
-        if (col.getData().get(0) instanceof Double) {
-            ArrayList<Double> list = (ArrayList<Double>) col.getData();
-            for (int i = 0; i < list.size(); i++) {
-                sum += list.get(i);
-            }
-        } else if (col.getData().get(0) instanceof Integer) {
-            ArrayList<Integer> list = (ArrayList<Integer>) col.getData();
-            for (int i = 0; i < list.size(); i++) {
-                sum += list.get(i);
-            }
-        } else {
-            sum = -1;
+        
+        ArrayList<Number> list = (ArrayList<Number>) col.getData();
+        for (int i = 0; i < list.size(); i++) {
+            sum += list.get(i).doubleValue();
+        }
+        return sum;
+    }
+    
+    public String sumStr(Column<String> col) {
+        String sum = "";
+        
+        ArrayList<String> list = (ArrayList<String>) col.getData();
+        for (int i = 0; i < list.size(); i++) {
+            sum += list.get(i);
         }
         return sum;
     }
