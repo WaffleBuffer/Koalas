@@ -11,11 +11,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -114,7 +117,7 @@ public class DataFrame implements IDataFrame {
         }
     }
 
-    public DataFrame(String filename) throws IOException {
+    public DataFrame(String filename) throws IOException, ParseException {
         
         File file = new File(filename);
         if(!file.exists()) {
@@ -130,38 +133,59 @@ public class DataFrame implements IDataFrame {
             List<String[]> records = csvReader.readAll();
             
             if(records.isEmpty()) {
-                throw new NoColumnsException("Empty file");
+                throw new NoColumnsException("Missing columns name");
             }
             
             int expectedWidth = records.get(0).length;
             int expectedHeight = records.size();
+            
             for (int i = 0; i < expectedWidth; i++) {
+                
                 String name = records.get(0)[i];
-                int currentType = Consts.dateType;
-                for (int j = 1; j < expectedHeight && currentType > Consts.stringType; j++) {
-                    if (currentType == Consts.dateType) {
+                Consts.DataType currentType = Consts.DataType.DATE;
+                
+                for (int j = 1; j < expectedHeight; j++) {
+                    
+                    String[] line = records.get(j);
+                    if(line.length != expectedWidth) {
+                        throw new ColumnsNotSameSizeException();
+                    }
+                    
+                    if (currentType == Consts.DataType.DATE) {
                         try {
-                            Date.parse(records.get(j)[i]);
-                        } catch (Exception e) {
-                            currentType = Consts.doubleType;
+                            String data = records.get(j)[i].toLowerCase();
+                            //System.out.println("DEBUG : Trying to parse : \"" + data + "\"");
+                            String dateFormat = DateUtile.determineDateFormat(data);
+                            if(dateFormat != null) {
+                                //System.out.println("DEBUG : format found : " + dateFormat);
+                                SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+                                Date date = format.parse(records.get(j)[i]);
+                                //System.out.println("DEBUG : Date found : " + date);
+                            }
+                            else {
+                                currentType = Consts.DataType.INT;
+                            }
+                        } catch (ParseException e) {
+                            //System.out.println("DEBUG : Date exception : " + e.toString());
+                            currentType = Consts.DataType.INT;
                         }
                     }
                     
-                    if (currentType == Consts.integerType) {
+                    if (currentType == Consts.DataType.INT) {
                         try {
                             Integer.parseInt(records.get(j)[i]);
 
-                        } catch (Exception e) {
-                            currentType = Consts.doubleType;
+                        } catch (NumberFormatException e) {
+                            currentType = Consts.DataType.DOUBLE;
                         }
                     }
 
-                    if (currentType == Consts.doubleType) {
+                    if (currentType == Consts.DataType.DOUBLE) {
                         try {
                             Double.parseDouble(records.get(j)[i]);
 
-                        } catch (Exception e) {
-                            currentType = Consts.stringType;
+                        } catch (NumberFormatException e) {
+                            currentType = Consts.DataType.STRING;
                         }
                     }
                     
@@ -169,15 +193,15 @@ public class DataFrame implements IDataFrame {
 
                 ArrayList values;
                 switch (currentType) {
-                    case Consts.dateType:
+                    case DATE:
                         values = new ArrayList<Date>();
                         break;
 
-                    case Consts.doubleType:
+                    case DOUBLE:
                         values = new ArrayList<Double>();
 
                         break;
-                    case Consts.integerType:
+                    case INT:
                         values = new ArrayList<Integer>();
                         break;
                     default:
@@ -185,18 +209,21 @@ public class DataFrame implements IDataFrame {
                         break;
                 }
 
-                System.out.println("Current Type is : " + currentType);
+                //System.out.println("DEBUG : Current Type is : " + currentType);
                 for (int j = 1; j < expectedHeight; j++) {
                     switch (currentType) {
-                        case Consts.dateType:
-                            values.add(Date.parse(records.get(j)[i]));
+                        case DATE:
+                            String dateFormat = DateUtile.determineDateFormat(records.get(j)[i]);
+                            SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+                            Date date = format.parse(records.get(j)[i]);
+                            values.add(date);
                             break;
 
-                        case Consts.doubleType:
+                        case DOUBLE:
                             values.add(Double.parseDouble(records.get(j)[i]));
 
                             break;
-                        case Consts.integerType:
+                        case INT:
                             values.add(Integer.parseInt(records.get(j)[i]));
                             break;
                         default:
@@ -206,7 +233,9 @@ public class DataFrame implements IDataFrame {
 
                 }
 
-                colList.add(new Column(name, values));
+                Column col = new Column(name, values);
+                col.setDataType(currentType);
+                colList.add(col);
 
             }
 
@@ -360,10 +389,7 @@ public class DataFrame implements IDataFrame {
             return false;
         }
         final DataFrame other = (DataFrame) obj;
-        if (!Objects.equals(this.dataset, other.dataset)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.dataset, other.dataset);
     }
 
     @Override

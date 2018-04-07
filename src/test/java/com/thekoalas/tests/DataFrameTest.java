@@ -1,25 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thekoalas.tests;
 
 import com.thekoalas.koalas.Column;
 import com.thekoalas.koalas.ColumnsNotSameSizeException;
 import com.thekoalas.koalas.DataFrame;
+import com.thekoalas.koalas.DateUtile;
 import com.thekoalas.koalas.NameAlreadyDefinedException;
 import com.thekoalas.koalas.NoColumnsException;
 import com.thekoalas.koalas.NotAsMuchNamesAsColumnsException;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.AbstractList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -27,10 +23,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author medardt
- */
 public class DataFrameTest {
     
     private DataFrame defaultDataFrame;
@@ -338,10 +330,6 @@ public class DataFrameTest {
         col2.add(2);
         col2.add(2);
         col2.add(2);
-        ArrayList<String> col3 = new ArrayList<>();
-        col3.add("Row1");
-        col3.add("Row2");
-        col3.add("Row3");
 
         List<List<? extends Comparable>> l2 = new ArrayList<>();
         l2.add(col1);
@@ -560,13 +548,13 @@ public class DataFrameTest {
     }
 
     @Test (expected = IOException.class)
-    public void testDataFrameFromInvalidFile() throws IOException {
+    public void testDataFrameFromInvalidFile() throws IOException, ParseException {
         
         DataFrame data = new DataFrame("");
     }
     
     @Test (expected = NoColumnsException.class)
-    public void testDataFrameFromEmptyFile() throws IOException {
+    public void testDataFrameFromEmptyFile() throws IOException, ParseException {
         
         String fileName = "testDataFrameFile.dat";
         
@@ -581,7 +569,254 @@ public class DataFrameTest {
     }
     
     @Test
-    public void testDataFrameFromCsvFile() throws IOException {
+    public void testDataFrameFromCsvFileDifType() throws IOException, ParseException {
+        
+        String fileName = "testDataFrameFile.csv";
+        
+        final File testFile = new File(fileName);
+        if(testFile.exists()) {
+            testFile.delete();
+        }
+        
+        testFile.createNewFile();
+        
+        ArrayList<Column> list = new ArrayList<Column>();
+        
+        ArrayList<Integer> col1IntList = new ArrayList<Integer>();
+        col1IntList.add(2);
+        col1IntList.add(1);
+        
+        ArrayList<String> col2StringList = new ArrayList<String>();
+        col2StringList.add(new Date().toString());
+        col2StringList.add("Row1");
+        
+        ArrayList<Date> col3DateList = new ArrayList<Date>();
+        Date date = new Date(0);
+        String dateFormat = DateUtile.determineDateFormat(date.toString());
+        if(dateFormat != null) {
+            SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+            Date parsedDate = format.parse(date.toString());
+            col3DateList.add(parsedDate);
+        }
+        
+        date = new Date();
+        dateFormat = DateUtile.determineDateFormat(date.toString());
+        if(dateFormat != null) {
+            SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+            Date parsedDate = format.parse(date.toString());
+            col3DateList.add(parsedDate);
+        }
+        
+        ArrayList<Double> col4DoubleList = new ArrayList<Double>();
+        col4DoubleList.add(52.06);
+        col4DoubleList.add(0.05);
+        
+        list.add(new Column<Integer>("Ints", col1IntList));
+        list.add(new Column<String>("Strings+Date", col2StringList));
+        list.add(new Column<Date>("Dates", col3DateList));
+        list.add(new Column<Double>("Doubles", col4DoubleList));
+        
+        try (
+                PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+                ) {
+            
+            int j = 0;
+            for(Column col : list) {
+                
+                String line = col.getName();
+                if(j + 1 < list.size()) {
+                    line += ",";
+                }
+                writer.print(line);
+                j++;
+            }
+            writer.println();
+            
+            for(int i = 0; i < list.get(0).getData().size(); ++i) {
+                
+                for(j = 0; j < list.size(); ++j) {
+                    
+                    Column col = list.get(j);
+                    String line = col.getData().get(i).toString();
+                    if(j + 1 < list.size()) {
+                        line += ",";
+                    }
+                    writer.print(line);
+                }
+                writer.println();
+            }
+            
+            writer.flush();
+            
+            DataFrame expectedData = new DataFrame(list);
+            DataFrame data = new DataFrame(fileName);
+            
+            assertEquals(expectedData, data);
+        }
+    }
+    
+    @Test (expected = ColumnsNotSameSizeException.class)
+    public void testDataFrameFromCsvFileDifHeight() throws IOException, ParseException {
+        
+        String fileName = "testDataFrameFile.csv";
+        
+        final File testFile = new File(fileName);
+        if(testFile.exists()) {
+            testFile.delete();
+        }
+        
+        testFile.createNewFile();
+        
+        ArrayList<Column> list = new ArrayList<Column>();
+        
+        ArrayList<Integer> col1IntList = new ArrayList<Integer>();
+        col1IntList.add(2);
+        col1IntList.add(1);
+        
+        ArrayList<String> col2StringList = new ArrayList<String>();
+        col2StringList.add("Row1");
+        
+        ArrayList<Date> col3DateList = new ArrayList<Date>();
+        Date date = new Date(0);
+        String dateFormat = DateUtile.determineDateFormat(date.toString());
+        if(dateFormat != null) {
+            SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+            Date parsedDate = format.parse(date.toString());
+            col3DateList.add(parsedDate);
+        }
+        
+        date = new Date();
+        dateFormat = DateUtile.determineDateFormat(date.toString());
+        if(dateFormat != null) {
+            SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+            Date parsedDate = format.parse(date.toString());
+            col3DateList.add(parsedDate);
+        }
+        
+        ArrayList<Double> col4DoubleList = new ArrayList<Double>();
+        col4DoubleList.add(52.06);
+        col4DoubleList.add(0.05);
+        
+        list.add(new Column("Ints", col1IntList));
+        list.add(new Column("Strings", col2StringList));
+        list.add(new Column("Dates", col3DateList));
+        list.add(new Column("Doubles", col4DoubleList));
+        
+        try (
+                PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+                ) {
+            
+            int j = 0;
+            for(Column col : list) {
+                
+                String line = col.getName();
+                if(j + 1 < list.size()) {
+                    line += ",";
+                }
+                writer.print(line);
+                j++;
+            }
+            writer.println();
+            
+            for(int i = 0; i < list.get(0).getData().size(); ++i) {
+                
+                for(j = 0; j < list.size(); ++j) {
+                    
+                    Column col = list.get(j);
+                    if(i >= col.getData().size()) {
+                        continue;
+                    }
+                    String line = col.getData().get(i).toString();
+                    if(j + 1 < list.size()) {
+                        line += ",";
+                    }
+                    writer.print(line);
+                }
+                writer.println();
+            }
+            
+            writer.flush();
+            DataFrame data = new DataFrame(fileName);
+        }
+    }
+    
+    @Test
+    public void testDataFrameFromCsvFileInvlidDates() throws IOException, ParseException {
+        
+        String fileName = "testDataFrameFile.csv";
+        
+        final File testFile = new File(fileName);
+        if(testFile.exists()) {
+            testFile.delete();
+        }
+        
+        testFile.createNewFile();
+        
+        ArrayList<Column> list = new ArrayList<Column>();
+        
+        ArrayList<Integer> col1IntList = new ArrayList<Integer>();
+        col1IntList.add(2);
+        col1IntList.add(1);
+        
+        ArrayList<String> col2StringList = new ArrayList<String>();
+        col2StringList.add("Row1");
+        col2StringList.add("Row2");
+        
+        ArrayList<String> col3DateList = new ArrayList<String>();
+        
+        col3DateList.add("thu jan 01 01:00:00 MOI 1970");
+        col3DateList.add("thu jan 01 01:00:00 TOI 1970");
+        
+        ArrayList<Double> col4DoubleList = new ArrayList<Double>();
+        col4DoubleList.add(52.06);
+        col4DoubleList.add(0.05);
+        
+        list.add(new Column("Ints", col1IntList));
+        list.add(new Column("Strings", col2StringList));
+        list.add(new Column("InvlidDates", col3DateList));
+        list.add(new Column("Doubles", col4DoubleList));
+        
+        try (
+                PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+                ) {
+            
+            int j = 0;
+            for(Column col : list) {
+                
+                String line = col.getName();
+                if(j + 1 < list.size()) {
+                    line += ",";
+                }
+                writer.print(line);
+                j++;
+            }
+            writer.println();
+            
+            for(int i = 0; i < list.get(0).getData().size(); ++i) {
+                
+                for(j = 0; j < list.size(); ++j) {
+                    
+                    Column col = list.get(j);
+                    String line = col.getData().get(i).toString();
+                    if(j + 1 < list.size()) {
+                        line += ",";
+                    }
+                    writer.print(line);
+                }
+                writer.println();
+            }
+            
+            writer.flush();
+            
+            DataFrame expectedData = new DataFrame(list);
+            DataFrame data = new DataFrame(fileName);
+            
+            assertEquals(expectedData, data);
+        }
+    }
+    
+    @Test
+    public void testDataFrameFromCsvFile() throws IOException, ParseException {
         
         String fileName = "testDataFrameFile.csv";
         
@@ -603,8 +838,22 @@ public class DataFrameTest {
         col2StringList.add("Row2");
         
         ArrayList<Date> col3DateList = new ArrayList<Date>();
-        col3DateList.add(new Date());
-        col3DateList.add(new Date(0));
+        
+        Date date = new Date(0);
+        String dateFormat = DateUtile.determineDateFormat(date.toString());
+        if(dateFormat != null) {
+            SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+            Date parsedDate = format.parse(date.toString());
+            col3DateList.add(parsedDate);
+        }
+        
+        date = new Date();
+        dateFormat = DateUtile.determineDateFormat(date.toString());
+        if(dateFormat != null) {
+            SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+            Date parsedDate = format.parse(date.toString());
+            col3DateList.add(parsedDate);
+        }
         
         ArrayList<Double> col4DoubleList = new ArrayList<Double>();
         col4DoubleList.add(52.06);
@@ -619,18 +868,28 @@ public class DataFrameTest {
                 PrintWriter writer = new PrintWriter(fileName, "UTF-8");
                 ) {
             
+            int j = 0;
             for(Column col : list) {
-                writer.print(col.getName() + ",");
+                
+                String line = col.getName();
+                if(j + 1 < list.size()) {
+                    line += ",";
+                }
+                writer.print(line);
+                j++;
             }
             writer.println();
             
-            int j;
             for(int i = 0; i < list.get(0).getData().size(); ++i) {
                 
                 for(j = 0; j < list.size(); ++j) {
                     
                     Column col = list.get(j);
-                    writer.print(col.getData().get(i).toString() + ",");
+                    String line = col.getData().get(i).toString();
+                    if(j + 1 < list.size()) {
+                        line += ",";
+                    }
+                    writer.print(line);
                 }
                 writer.println();
             }

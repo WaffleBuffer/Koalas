@@ -1,8 +1,11 @@
 package com.thekoalas.koalas;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -66,7 +69,13 @@ public abstract class Koalas {
         data.statistics();
         
         
-        DataFrame d = new DataFrame("test.csv");
+        DataFrame d = null;
+        try {
+            d = new DataFrame("test.csv");
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+            System.exit(-1);
+        }
         System.out.println(d.groupByAggregate("country", "max"));
         System.out.println(data.groupByAggregate("C", "avg"));
     }

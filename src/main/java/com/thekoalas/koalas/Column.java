@@ -17,6 +17,7 @@ public class Column<T extends Comparable<T>> {
 
     private String name;
     private List data;
+    private Consts.DataType dataType;
 
     public Column(String name, List data) {
         this.name = name;
@@ -62,9 +63,14 @@ public class Column<T extends Comparable<T>> {
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!Objects.equals(this.data, other.data)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.data, other.data);
+    }
+
+    public Consts.DataType getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(Consts.DataType dataType) {
+        this.dataType = dataType;
     }
 }
