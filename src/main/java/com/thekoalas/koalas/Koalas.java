@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -67,8 +65,7 @@ public abstract class Koalas {
         System.out.println("Hello koalas !");
         System.out.println(data);
         data.statistics();
-        
-        
+
         DataFrame d = null;
         try {
             d = new DataFrame("test.csv");
@@ -76,8 +73,12 @@ public abstract class Koalas {
             ex.printStackTrace();
             System.exit(-1);
         }
-        System.out.println(d.groupByAggregate("country", "max"));
-        System.out.println(data.groupByAggregate("C", "avg"));
+        List<String> l = new ArrayList<>();
+        l.add("country");
+
+        l = new ArrayList<>();
+        l.add("B");
+        System.out.println(data.groupBy(l));
     }
 
     public static String hello() {

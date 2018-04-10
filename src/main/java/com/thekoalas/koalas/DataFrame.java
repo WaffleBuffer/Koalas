@@ -118,51 +118,49 @@ public class DataFrame implements IDataFrame {
     }
 
     public DataFrame(String filename) throws IOException, ParseException {
-        
+
         File file = new File(filename);
-        if(!file.exists()) {
+        if (!file.exists()) {
             throw new IOException("File doesn't exists");
         }
-        
+
         ArrayList<Column> colList = new ArrayList<>();
         try (
                 Reader reader = Files.newBufferedReader(Paths.get(filename));
-                CSVReader csvReader = new CSVReader(reader);
-            ) {
+                CSVReader csvReader = new CSVReader(reader);) {
 
             List<String[]> records = csvReader.readAll();
-            
-            if(records.isEmpty()) {
+
+            if (records.isEmpty()) {
                 throw new NoColumnsException("Missing columns name");
             }
-            
+
             int expectedWidth = records.get(0).length;
             int expectedHeight = records.size();
-            
+
             for (int i = 0; i < expectedWidth; i++) {
-                
+
                 String name = records.get(0)[i];
                 Consts.DataType currentType = Consts.DataType.DATE;
-                
+
                 for (int j = 1; j < expectedHeight; j++) {
-                    
+
                     String[] line = records.get(j);
-                    if(line.length != expectedWidth) {
+                    if (line.length != expectedWidth) {
                         throw new ColumnsNotSameSizeException();
                     }
-                    
+
                     if (currentType == Consts.DataType.DATE) {
                         try {
                             String data = records.get(j)[i].toLowerCase();
                             //System.out.println("DEBUG : Trying to parse : \"" + data + "\"");
                             String dateFormat = DateUtile.determineDateFormat(data);
-                            if(dateFormat != null) {
+                            if (dateFormat != null) {
                                 //System.out.println("DEBUG : format found : " + dateFormat);
                                 SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
                                 Date date = format.parse(records.get(j)[i]);
                                 //System.out.println("DEBUG : Date found : " + date);
-                            }
-                            else {
+                            } else {
                                 currentType = Consts.DataType.INT;
                             }
                         } catch (ParseException e) {
@@ -170,7 +168,7 @@ public class DataFrame implements IDataFrame {
                             currentType = Consts.DataType.INT;
                         }
                     }
-                    
+
                     if (currentType == Consts.DataType.INT) {
                         try {
                             Integer.parseInt(records.get(j)[i]);
@@ -188,7 +186,7 @@ public class DataFrame implements IDataFrame {
                             currentType = Consts.DataType.STRING;
                         }
                     }
-                    
+
                 }
 
                 ArrayList values;
@@ -396,83 +394,44 @@ public class DataFrame implements IDataFrame {
     public String statistics() {
         String retour = "";
         for (int i = 0; i < this.dataset.size(); i++) {
-            List<Comparable> values = this.dataset.get(i).getData();
-            Comparable min = values.get(0);
-            Comparable max = values.get(0);
-            for (int j = 1; j < values.size(); j++) {
-                if (values.get(j).compareTo(min) < 0) {
-                    min = values.get(j);
-                }
-                if (values.get(j).compareTo(max) > 0) {
-
-                    max = values.get(j);
-                }
-            }
-            
-            String sum = "(invalid type to sum)";
-            String mean = "(invlid type for mean)";
-            
-            if(!values.isEmpty()) {
-                if(values.get(0) instanceof Number) {
-                    Double sumRes = sumNbr(this.dataset.get(i));
-                    sum = Double.toString(sumRes);
-                    Double meanRes = sumRes / this.dataset.get(i).getData().size();
-                    mean = Double.toString(meanRes);
-                }
-                else if(values.get(0) instanceof String) {
-                    sum = sumStr(this.dataset.get(i));
-                }
-            }
-
-            retour += "Colonne " + this.dataset.get(i).getName() + " : minimum is " + min + " maximum is " + max + " sum is " + sum + " mean is " + mean + "\n";
-            //System.out.println("Colonne " + this.dataset.get(i).getName() + " : minimum is  " + min + " maximum is " + max + " sum is " + sum + " mean is " + sum / this.dataset.get(i).getData().size());
+            retour += "Colonne " + this.dataset.get(i).getName() + " : minimum is " + this.dataset.get(i).min() + " maximum is " + this.dataset.get(i).max() + " sum is " + this.dataset.get(i).sum() + " mean is " + this.dataset.get(i).mean() + "\n";
         }
 
         return retour;
     }
-    
-    public double sumNbr(Column<? extends Number> col) {
-        double sum = 0;
-        
-        ArrayList<Number> list = (ArrayList<Number>) col.getData();
-        for (int i = 0; i < list.size(); i++) {
-            sum += list.get(i).doubleValue();
-        }
-        return sum;
-    }
-    
-    public String sumStr(Column<String> col) {
-        String sum = "";
-        
-        ArrayList<String> list = (ArrayList<String>) col.getData();
-        for (int i = 0; i < list.size(); i++) {
-            sum += list.get(i);
-        }
-        return sum;
-    }
 
-    @Override
-    public String groupByAggregate(String colName, String function) {
-        int col = -1;
-        for (int i = 0; i < dataset.size() && col == -1; i++) {
-            if (colName.equals(dataset.get(i).getName())) {
-                col = i;
-
+    public GroupBy groupBy(List<String> colName) {
+        List<Integer> colIndices = new ArrayList<>();
+        for (int j = 0; j < colName.size(); j++) {
+            int col = -1;
+            for (int i = 0; i < dataset.size() && col == -1; i++) {
+                if (colName.get(j).equals(dataset.get(i).getName())) {
+                    col = i;
+                }
             }
-
+            if (col == -1) {
+                throw new UnknownNameException();
+            }
+            colIndices.add(col);
         }
-        if (col == -1) {
-            return "col not found";
-        }
+        int col = colIndices.get(0);
         HashMap<String, ArrayList<Integer>> map = new HashMap<>();
+        HashMap<String, ArrayList<Comparable>> mapValues = new HashMap<>();
         List<Comparable> colValues = dataset.get(col).getData();
         for (int i = 0; i < colValues.size(); i++) {
-            Comparable current = colValues.get(i);
-            String currentString = current.toString();
+            String currentString = "";
+            ArrayList<Comparable> groupValues = new ArrayList<>();
+            for (Integer val : colIndices) {
+                Comparable current = (Comparable) this.dataset.get(val).getData().get(i);
+                groupValues.add(current);
+                currentString += current.toString();
+            }
+
             if (!map.containsKey(currentString)) {
                 ArrayList<Integer> list = new ArrayList<>();
                 list.add(i);
                 map.put(currentString, list);
+                mapValues.put(currentString, groupValues);
             } else {
                 ArrayList<Integer> list = map.get(currentString);
                 list.add(i);
@@ -482,99 +441,28 @@ public class DataFrame implements IDataFrame {
         }
         Set<String> set = map.keySet();
         ArrayList<String> listGroup = new ArrayList<>(set);
-        switch (function) {
-            case "min":
-                //For each group, find minimum
-                for (int i = 0; i < listGroup.size(); i++) {
-                    ArrayList<Integer> list = map.get(listGroup.get(i));
-                    //Minimum for each column
-                    for (int j = 0; j < this.dataset.size(); j++) {
-                        Comparable min = (Comparable) this.dataset.get(j).getData().get(list.get(0));
-                        for (int k = 0; k < list.size(); k++) {
-                            Comparable value = (Comparable) this.dataset.get(j).getData().get(list.get(k));
-                            if (value.compareTo(min) < 0) {
-                                min = value;
-                            }
-                        }
-                        System.out.println("Group : " + listGroup.get(i) + " Column : " + this.dataset.get(j).getName() + " : min is " + min);
-                    }
+        ArrayList<GroupedData> groupD = new ArrayList<>();
+        for (int i = 0; i < listGroup.size(); i++) {
+            ArrayList<Integer> list = map.get(listGroup.get(i));
+            ArrayList<Column> cols = new ArrayList<>();
+            for (int j = 0; j < this.dataset.size(); j++) {
+                String name = this.dataset.get(j).getName();
+                ArrayList<Comparable> values = new ArrayList<>();
+                for (int k = 0; k < list.size(); k++) {
+                    values.add((Comparable) this.dataset.get(j).getData().get(list.get(k)));
+
                 }
-
-                break;
-            case "max":
-                for (int i = 0; i < listGroup.size(); i++) {
-                    ArrayList<Integer> list = map.get(listGroup.get(i));
-                    //Minimum for each column
-                    for (int j = 0; j < this.dataset.size(); j++) {
-                        Comparable max = (Comparable) this.dataset.get(j).getData().get(list.get(0));
-                        for (int k = 0; k < list.size(); k++) {
-                            Comparable value = (Comparable) this.dataset.get(j).getData().get(list.get(k));
-                            if (value.compareTo(max) > 0) {
-                                max = value;
-                            }
-                        }
-                        System.out.println("Group : " + listGroup.get(i) + " Column : " + this.dataset.get(j).getName() + " : max is " + max);
-                    }
-                }
-
-                break;
-
-            case "sum":
-                for (int i = 0; i < listGroup.size(); i++) {
-                    ArrayList<Integer> list = map.get(listGroup.get(i));
-                    for (int j = 0; j < this.dataset.size(); j++) {
-                        String name = this.dataset.get(j).getName();
-                        ArrayList<Comparable> values = new ArrayList<>();
-                        for (int k = 0; k < list.size(); k++) {
-                            values.add((Comparable) this.dataset.get(j).getData().get(list.get(k)));
-
-                        }
-                        Column colCreated = new Column(name, values);
-                        
-                        String sum = "(invalid type to sum)";
-
-                        if(!values.isEmpty()) {
-                            if(values.get(0) instanceof Number) {
-                                Double sumRes = sumNbr(this.dataset.get(i));
-                                sum = Double.toString(sumRes);
-                            }
-                            else if(values.get(0) instanceof String) {
-                                sum = sumStr(this.dataset.get(i));
-                            }
-                        }
-                        System.out.println("Group : " + listGroup.get(i) + " Column : " + this.dataset.get(j).getName() + " : sum is " + sum);
-                    }
-                }
-                break;
-
-            case "avg":
-                for (int i = 0; i < listGroup.size(); i++) {
-                    ArrayList<Integer> list = map.get(listGroup.get(i));
-                    for (int j = 0; j < this.dataset.size(); j++) {
-                        String name = this.dataset.get(j).getName();
-                        ArrayList<Comparable> values = new ArrayList<>();
-                        for (int k = 0; k < list.size(); k++) {
-                            values.add((Comparable) this.dataset.get(j).getData().get(list.get(k)));
-
-                        }
-                        Column colCreated = new Column(name, values);
-                        
-                        String mean = "(invlid type for mean)";
-
-                        if(!values.isEmpty()) {
-                            if(values.get(0) instanceof Number) {
-                                Double sumRes = sumNbr(this.dataset.get(i));
-                                Double meanRes = sumRes / this.dataset.get(i).getData().size();
-                                mean = Double.toString(meanRes);
-                            }
-                        }
-                        
-                        System.out.println("Group : " + listGroup.get(i) + " Column : " + this.dataset.get(j).getName() + " : avg is " + mean);
-                    }
-                }
-                break;
+                Column colCreated = new Column(name, values);
+                cols.add(colCreated);
+                
+            }
+            GroupedData d = new GroupedData(listGroup.get(i), colName, cols, mapValues.get(listGroup.get(i)));
+            groupD.add(d);
+            
         }
-
-        return "";
+        GroupBy g = new GroupBy(colName,groupD);
+        
+        return g;
     }
+
 }

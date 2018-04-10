@@ -93,7 +93,7 @@ public interface IDataFrame {
      * @param function The function to apply (max, min, sum, avg)
      * @return The statistics in String format
      */
-    public String groupByAggregate(String colName, String function);
+    public GroupBy groupBy(List<String> colName);
    
 
 }
