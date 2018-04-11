@@ -4,11 +4,9 @@ import com.thekoalas.koalas.Column;
 import com.thekoalas.koalas.ColumnsNotSameSizeException;
 import com.thekoalas.koalas.DataFrame;
 import com.thekoalas.koalas.DateUtile;
-import com.thekoalas.koalas.GroupBy;
 import com.thekoalas.koalas.NameAlreadyDefinedException;
 import com.thekoalas.koalas.NoColumnsException;
 import com.thekoalas.koalas.NotAsMuchNamesAsColumnsException;
-import com.thekoalas.koalas.UnknownNameException;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -228,23 +226,11 @@ public class DataFrameTest {
 
     @Test
     public void testDisplay() {
-
-        /*
-         * We can't get to the code that return "Trying to print an empty dataset"
-         * but we let it anyway for protection.
-         */
-        /*ArrayList<Column> list = new ArrayList<Column>();
-         ArrayList<Integer> col1IntList = new ArrayList<>();
-         col1IntList.add(1);
-         list.add(new Column("A", col1IntList));
         
-         DataFrame data = new DataFrame(list);
-         ArrayList<String> columnNames = new ArrayList<String>();
-         columnNames.add("B");
-         data = data.getColumnSubset(columnNames);
+        /*defaultDataFrame.setDataset(new ArrayList<Column>());
         
-         String expected = "Trying to print an empty dataset";
-         assertEquals(expected.replaceAll("\\s+", ""), data.display().replaceAll("\\s+", ""));*/
+        String expected = "Trying to print an empty dataset";
+        assertEquals(expected.replaceAll("\\s+", ""), defaultDataFrame.display().replaceAll("\\s+", ""));*/
     }
 
     @Test
@@ -285,7 +271,7 @@ public class DataFrameTest {
         col3.add("Row2");
         col3.add("Row3");
 
-        List<List<? extends Comparable>> l2 = new ArrayList<>();
+        List<List<? extends Comparable<?>>> l2 = new ArrayList<>();
         l2.add(col1);
         l2.add(col2);
         l2.add(col3);
@@ -316,7 +302,7 @@ public class DataFrameTest {
         col3.add("Row1");
         col3.add("Row2");
 
-        List<List<? extends Comparable>> l2 = new ArrayList<>();
+        List<List<? extends Comparable<?>>> l2 = new ArrayList<>();
         l2.add(col1);
         l2.add(col2);
         l2.add(col3);
@@ -343,7 +329,7 @@ public class DataFrameTest {
         col2.add(2);
         col2.add(2);
 
-        List<List<? extends Comparable>> l2 = new ArrayList<>();
+        List<List<? extends Comparable<?>>> l2 = new ArrayList<>();
         l2.add(col1);
         l2.add(col2);
 
@@ -373,7 +359,7 @@ public class DataFrameTest {
         col3.add("Row2");
         col3.add("Row3");
 
-        List<List<? extends Comparable>> l2 = new ArrayList<>();
+        List<List<? extends Comparable<?>>> l2 = new ArrayList<>();
         l2.add(col1);
         l2.add(col2);
         l2.add(col3);
@@ -909,183 +895,81 @@ public class DataFrameTest {
             assertEquals(expectedData, data);
         }
     }
-
-    @Test(expected = UnknownNameException.class)
-    public void testGroupByUnknownName() {
-        ArrayList<String> name = new ArrayList<>();
-        name.add("This will fail");
-        defaultDataFrame.groupBy(name);
-    }
-
-    @Test
-    public void testGroupByOneColumnOneGroup() {
-
-        ArrayList<String> names = new ArrayList<>();
-        names.add("A");
-        names.add("B");
-        names.add("C");
-
-        ArrayList<Integer> col1 = new ArrayList<>();
-        col1.add(1);
-        col1.add(2);
-        col1.add(3);
-        ArrayList<Integer> col2 = new ArrayList<>();
-        col2.add(2);
-        col2.add(2);
-        col2.add(2);
-        ArrayList<String> col3 = new ArrayList<>();
-        col3.add("Un");
-        col3.add("Deux");
-        col3.add("Trois");
-        List<List<? extends Comparable>> l2 = new ArrayList<>();
-        l2.add(col1);
-        l2.add(col2);
-        l2.add(col3);
-
-        DataFrame data = new DataFrame(names, l2);
-
-        ArrayList<String> toGroup = new ArrayList<>();
-        toGroup.add("B");
-        GroupBy g = data.groupBy(toGroup);
-
-        String expected = "Grouped by [B]\n"
-                + "A	 B	 C	 \n"
-                + "1	2	Un	\n"
-                + "2	2	Deux	\n"
-                + "3	2	Trois	";
-
-        assertEquals(expected.replaceAll("\\s+", ""), g.toString().replaceAll("\\s+", ""));
-    }
-
-    @Test
-    public void testGroupByOneColumnTwoGroups() {
-
-        ArrayList<String> names = new ArrayList<>();
-        names.add("A");
-        names.add("B");
-        names.add("C");
-
-        ArrayList<Integer> col1 = new ArrayList<>();
-        col1.add(1);
-        col1.add(2);
-        col1.add(3);
-        ArrayList<Integer> col2 = new ArrayList<>();
-        col2.add(2);
-        col2.add(2);
-        col2.add(3);
-        ArrayList<String> col3 = new ArrayList<>();
-        col3.add("Un");
-        col3.add("Deux");
-        col3.add("Trois");
-        List<List<? extends Comparable>> l2 = new ArrayList<>();
-        l2.add(col1);
-        l2.add(col2);
-        l2.add(col3);
-
-        DataFrame data = new DataFrame(names, l2);
-
-        ArrayList<String> toGroup = new ArrayList<>();
-        toGroup.add("B");
-        GroupBy g = data.groupBy(toGroup);
-
-        String expected = "Grouped by [B]\n"
-                + "A	 B	 C	 \n"
-                + "1	2	Un	\n"
-                + "2	2	Deux	\n"
-                + "Grouped by [B]\n"
-                + "A	 B	 C	 \n"
-                + "3	3	Trois	";
-
-        assertEquals(expected.replaceAll("\\s+", ""), g.toString().replaceAll("\\s+", ""));
-    }
-
-    @Test
-    public void testGroupBySeveralColumnsSeveralGroups() {
-        ArrayList<String> names = new ArrayList<>();
-        names.add("A");
-        names.add("B");
-        names.add("C");
-
-        ArrayList<Integer> col1 = new ArrayList<>();
-        col1.add(1);
-        col1.add(1);
-        col1.add(3);
-        col1.add(4);
-        ArrayList<Integer> col2 = new ArrayList<>();
-        col2.add(2);
-        col2.add(2);
-        col2.add(3);
-        col2.add(4);
-        ArrayList<String> col3 = new ArrayList<>();
-        col3.add("Un");
-        col3.add("Deux");
-        col3.add("Trois");
-        col3.add("Quatre");
-        List<List<? extends Comparable>> l2 = new ArrayList<>();
-        l2.add(col1);
-        l2.add(col2);
-        l2.add(col3);
-
-        DataFrame data = new DataFrame(names, l2);
-
-        ArrayList<String> toGroup = new ArrayList<>();
-        toGroup.add("A");
-        toGroup.add("B");
-        GroupBy g = data.groupBy(toGroup);
-
-        String expected = "Grouped by [A, B]\n"
-                + "A	 B	 C	 \n"
-                + "3	3	Trois	\n"
-                + "Grouped by [A, B]\n"
-                + "A	 B	 C	 \n"
-                + "4	4	Quatre	\n"
-                + "Grouped by [A, B]\n"
-                + "A	 B	 C	 \n"
-                + "1	2	Un	\n"
-                + "1	2	Deux	";
-
-        assertEquals(expected.replaceAll("\\s+", ""), g.toString().replaceAll("\\s+", ""));
+    
+    @Test (expected = NoColumnsException.class)
+    public void testDataFrameFromEmptyLists() {
+        
+        DataFrame data = new DataFrame(new ArrayList<String>(), new ArrayList<List<? extends Comparable<?>>>());
+        //Column col = new Column("test", new ArrayList());
     }
     
-    @Test
-    public void testGroupByCompareToOtherMethod() {
+    @Test (expected = NameAlreadyDefinedException.class)
+    public void testDataFrameFromRedundantLists() {
         
+        List<String> names = new ArrayList<String>();
+        List<List<? extends Comparable<?>>> data = new ArrayList<List<? extends Comparable<?>>>();
         
-        ArrayList<String> names = new ArrayList<>();
         names.add("A");
-        names.add("B");
-        names.add("C");
-
-        ArrayList<Integer> col1 = new ArrayList<>();
-        col1.add(1);
-        col1.add(1);
-        col1.add(3);
-        col1.add(4);
-        ArrayList<Integer> col2 = new ArrayList<>();
-        col2.add(2);
-        col2.add(2);
-        col2.add(3);
-        col2.add(4);
-        ArrayList<String> col3 = new ArrayList<>();
-        col3.add("Un");
-        col3.add("Deux");
-        col3.add("Trois");
-        col3.add("Quatre");
-        List<List<? extends Comparable>> l2 = new ArrayList<>();
-        l2.add(col1);
-        l2.add(col2);
-        l2.add(col3);
-
-        DataFrame data = new DataFrame(names, l2);
+        data.add(new ArrayList<Comparable<?>>());
         
+        names.add("A");
+        data.add(new ArrayList<Comparable<?>>());
         
-        ArrayList<String> name = new ArrayList<>();
-        name.add("A");
-        name.add("B");
-        
-        String[] nameTab = {"A","B"};
-        
-        assertEquals(data.groupBy(name),data.groupBy(nameTab));
+        DataFrame dataFrame = new DataFrame(names, data);
+    }
     
+    @Test (expected = ColumnsNotSameSizeException.class)
+    public void testDataFrameFromDiffLists() {
+        
+        List<String> names = new ArrayList<String>();
+        List<List<? extends Comparable<?>>> data = new ArrayList<List<? extends Comparable<?>>>();       
+        
+        names.add("A");
+        ArrayList<Comparable<?>> aData = new ArrayList<Comparable<?>>();
+        aData.add("koala");
+        data.add(aData);        
+        
+        names.add("B");
+        data.add(new ArrayList<Comparable<?>>());
+        
+        DataFrame dataFrame = new DataFrame(names, data);
+    }
+    
+    @Test (expected = ColumnsNotSameSizeException.class)
+    public void testSetDataSetDiffSize() {
+        
+        ArrayList<Column> list = new ArrayList<>();
+        ArrayList<Integer> col1IntList = new ArrayList<>();
+        col1IntList.add(2);
+        col1IntList.add(1);
+        ArrayList<String> col2StringList = new ArrayList<>();
+        col2StringList.add("Row1");
+        //col2StringList.add("Row2");
+
+        Column colA = new Column("A", col1IntList);
+        Column colB = new Column("B", col2StringList);
+        list.add(colA);
+        list.add(colB);
+        
+        defaultDataFrame.setDataset(list);
+    }
+    
+    @Test (expected = NameAlreadyDefinedException.class)
+    public void testSetDataSetSameName() {
+        
+        ArrayList<Column> list = new ArrayList<>();
+        ArrayList<Integer> col1IntList = new ArrayList<>();
+        col1IntList.add(2);
+        col1IntList.add(1);
+        ArrayList<String> col2StringList = new ArrayList<>();
+        col2StringList.add("Row1");
+        col2StringList.add("Row2");
+
+        Column colA = new Column("A", col1IntList);
+        Column colB = new Column("A", col2StringList);
+        list.add(colA);
+        list.add(colB);
+        
+        defaultDataFrame.setDataset(list);
     }
 }

@@ -61,7 +61,7 @@
                         </execution>
                         <execution>
                             <id>default-report</id>
-                            <phase>install</phase>
+                            <phase>site</phase>
                             <goals>
                                 <goal>report</goal>
                             </goals>

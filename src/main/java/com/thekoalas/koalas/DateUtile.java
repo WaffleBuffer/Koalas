@@ -3,9 +3,9 @@ package com.thekoalas.koalas;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class DateUtile {
+public interface DateUtile {
     
-    private static final Map<String, String> DATE_FORMAT_REGEXPS = new HashMap<String, String>() {{
+    public static final Map<String, String> DATE_FORMAT_REGEXPS = new HashMap<String, String>() {{
         put("^\\d{8}$", "yyyyMMdd");
         put("^\\d{1,2}-\\d{1,2}-\\d{4}$", "dd-MM-yyyy");
         put("^\\d{4}-\\d{1,2}-\\d{1,2}$", "yyyy-MM-dd");

@@ -50,7 +50,7 @@ public abstract class Koalas {
         col3.add("Coucou");
         col3.add("Coucou");
         col3.add("Coucou");
-        List<List<? extends Comparable>> l2 = new ArrayList<>();
+        List<List<? extends Comparable<?>>> l2 = new ArrayList<>();
         l2.add(col1);
         l2.add(col2);
         l2.add(col3);

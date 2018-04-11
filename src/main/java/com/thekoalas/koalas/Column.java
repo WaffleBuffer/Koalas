@@ -18,7 +18,6 @@ public class Column<T extends Comparable<T>> {
 
     private String name;
     private List data;
-    private Consts.DataType dataType;
 
     public Column(String name, List data) {
         this.name = name;
@@ -42,14 +41,6 @@ public class Column<T extends Comparable<T>> {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 53 * hash + Objects.hashCode(this.name);
-        hash = 53 * hash + Objects.hashCode(this.data);
-        return hash;
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -65,14 +56,6 @@ public class Column<T extends Comparable<T>> {
             return false;
         }
         return Objects.equals(this.data, other.data);
-    }
-
-    public Consts.DataType getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(Consts.DataType dataType) {
-        this.dataType = dataType;
     }
     
     public Comparable min() {

@@ -44,7 +44,7 @@ public class DataFrame implements IDataFrame {
         return dataset;
     }
 
-    private void setDataset(List<Column> dataset) throws NoColumnsException {
+    public void setDataset(List<Column> dataset) throws NoColumnsException {
 
         if (dataset.isEmpty()) {
             throw new NoColumnsException();
@@ -76,7 +76,7 @@ public class DataFrame implements IDataFrame {
         this.dataset = dataset;
     }
 
-    public DataFrame(List<String> names, List<List<? extends Comparable>> columns) throws NotAsMuchNamesAsColumnsException, NoColumnsException, ColumnsNotSameSizeException {
+    public DataFrame(List<String> names, List<List<? extends Comparable<?>>> columns) throws NotAsMuchNamesAsColumnsException, NoColumnsException, ColumnsNotSameSizeException {
 
         boolean allEqual = true;
 
@@ -92,9 +92,8 @@ public class DataFrame implements IDataFrame {
 
         int sizeExpected = columns.get(0).size();
         HashSet<String> map = new HashSet();
-        boolean alreadyDefined = false;
 
-        for (int i = 0; i < columns.size() && allEqual && !alreadyDefined; i++) {
+        for (int i = 0; i < columns.size() && allEqual; i++) {
             allEqual = (columns.get(i).size() == sizeExpected);
             if (map.contains(names.get(i))) {
                 throw new NameAlreadyDefinedException();
@@ -106,9 +105,6 @@ public class DataFrame implements IDataFrame {
         if (!allEqual) {
             System.out.println("The number of data is not the same in all columns. Aborting");
             throw new ColumnsNotSameSizeException();
-        }
-        if (alreadyDefined) {
-            throw new NameAlreadyDefinedException();
         }
 
         this.dataset = new ArrayList<>();
@@ -233,7 +229,6 @@ public class DataFrame implements IDataFrame {
                 }
 
                 Column col = new Column(name, values);
-                col.setDataType(currentType);
                 colList.add(col);
 
             }
@@ -256,6 +251,7 @@ public class DataFrame implements IDataFrame {
     @Override
     public String display() {
 
+        // We should never go in this if but just in case, we let it here
         if (this.dataset.isEmpty()) {
             return "Trying to print an empty dataset";
         }
