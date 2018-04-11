@@ -81,12 +81,10 @@ public class DataFrame implements IDataFrame {
         boolean allEqual = true;
 
         if (names.size() != columns.size()) {
-            System.out.println("The number of names is not equal to the number of values column. Aborting");
             throw new NotAsMuchNamesAsColumnsException();
         }
 
         if (columns.isEmpty()) {
-            System.out.println("Trying to create an empty dataset. Aborting");
             throw new NoColumnsException();
         }
 
@@ -103,7 +101,6 @@ public class DataFrame implements IDataFrame {
         }
 
         if (!allEqual) {
-            System.out.println("The number of data is not the same in all columns. Aborting");
             throw new ColumnsNotSameSizeException();
         }
 
@@ -150,18 +147,14 @@ public class DataFrame implements IDataFrame {
                     if (currentType == Consts.DataType.DATE) {
                         try {
                             String data = records.get(j)[i].toLowerCase();
-                            //System.out.println("DEBUG : Trying to parse : \"" + data + "\"");
                             String dateFormat = DateUtile.determineDateFormat(data);
                             if (dateFormat != null) {
-                                //System.out.println("DEBUG : format found : " + dateFormat);
                                 SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
                                 Date date = format.parse(records.get(j)[i]);
-                                //System.out.println("DEBUG : Date found : " + date);
                             } else {
                                 currentType = Consts.DataType.INT;
                             }
                         } catch (ParseException e) {
-                            //System.out.println("DEBUG : Date exception : " + e.toString());
                             currentType = Consts.DataType.INT;
                         }
                     }
@@ -204,7 +197,6 @@ public class DataFrame implements IDataFrame {
                         break;
                 }
 
-                //System.out.println("DEBUG : Current Type is : " + currentType);
                 for (int j = 1; j < expectedHeight; j++) {
                     switch (currentType) {
                         case DATE:
@@ -273,7 +265,6 @@ public class DataFrame implements IDataFrame {
     public String head(int nbLines) {
         int linesPossible = this.dataset.get(0).getData().size();
         if (linesPossible < nbLines) {
-            System.out.println("Impossible d'afficher " + nbLines);
             return display();
         }
         String ret = getColNames();
@@ -295,7 +286,6 @@ public class DataFrame implements IDataFrame {
     public String tail(int nbLines) {
         int linesPossible = this.dataset.get(0).getData().size();
         if (linesPossible < nbLines) {
-            System.out.println("Impossible d'afficher " + nbLines);
             return display();
         }
         String ret = getColNames();
@@ -402,7 +392,7 @@ public class DataFrame implements IDataFrame {
 
         return retour;
     }
-    
+
     @Override
     public GroupBy groupBy(String[] colName) {
         return groupBy(new ArrayList(Arrays.asList(colName)));

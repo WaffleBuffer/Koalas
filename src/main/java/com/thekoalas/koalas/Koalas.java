@@ -81,8 +81,10 @@ public abstract class Koalas {
         
         List<String> l100 = new ArrayList<>();
         l100.add("A");
+        l100.add("B");
+        l100.add("C");
         
-        System.out.println(data.groupBy(l).max(l100));
+        System.out.println(data.groupBy(l).mean(l100));
     }
 
     public static String hello() {
