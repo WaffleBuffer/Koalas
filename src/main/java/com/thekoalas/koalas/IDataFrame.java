@@ -50,15 +50,17 @@ public interface IDataFrame {
     public String tail();
 
     /**
-     * Returns the content of all the dataset from the index startIndex
+     * Returns the content of all the dataset from indexes.
      *
-     * If the index is out of range : an exeption is raised (IndexOutOfBounds)
+     * If the indexes are invalid (out of range for exemple) : an exeption is raised (IndexOutOfBounds)
      *
      * @param startIndex The first index from where the data should be
-     * displayed.
+     * get.
+     * @param endIndex The end of the last line to get. If it is superior than 
+     * the IDataFrame size, then only the valid content will be get.
      * @return The content of all the dataset from the index startIndex.
      */
-    public DataFrame getLineSubset(int startIndex);
+    public IDataFrame getLineSubset(int startIndex, int endIndex);
 
     /**
      * Returns the content of all lines from the column names specified in
@@ -66,7 +68,7 @@ public interface IDataFrame {
      *
      * Invalid names can be provided, no warning will be displayed.
      *
-     * @param columnNames The name of the columns which should be displayed
+     * @param columnNames The name of the columns which should be get
      * @return the content of all lines from the column names specified in
      * columnNames.
      */

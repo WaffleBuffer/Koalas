@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thekoalas.koalas;
 
 import com.opencsv.CSVReader;
@@ -23,10 +18,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
-/**
- *
- * @author zhangna
- */
 public class DataFrame implements IDataFrame {
 
     private List<Column> dataset;
@@ -308,10 +299,10 @@ public class DataFrame implements IDataFrame {
     }
 
     @Override
-    public DataFrame getLineSubset(int startIndex) {
+    public DataFrame getLineSubset(int startIndex, int endIndex) {
         int linesPossible = this.dataset.get(0).getData().size();
-        if (startIndex < 0 || startIndex >= linesPossible) {
-            return this;
+        if (startIndex < 0 || endIndex < 0 || startIndex >= linesPossible || endIndex >= linesPossible) {
+            throw new IndexOutOfBoundsException("Invalid indexes in getLineSubset");
         }
 
         List<Column> cols = new ArrayList<>();
@@ -321,6 +312,10 @@ public class DataFrame implements IDataFrame {
             ArrayList list = (ArrayList) ((ArrayList) this.dataset.get(i).getData()).clone();
             for (int j = 0; j < startIndex; j++) {
                 list.remove(0);
+                --endIndex;
+            }
+            for (int j = list.size() - 1; j >= endIndex; j--) {
+                list.remove(list.size() - 1);
             }
             Column toAdd = new Column(name, list);
             cols.add(toAdd);

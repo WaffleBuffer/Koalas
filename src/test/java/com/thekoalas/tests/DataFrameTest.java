@@ -517,16 +517,14 @@ public class DataFrameTest {
         List<Integer> colE1 = new ArrayList<>();
         colE1.add(6);
         colE1.add(7);
-        colE1.add(8);
-        colE1.add(9);
         expectedCol.add(new Column("A", colE1));
         DataFrame expectedData = new DataFrame(expectedCol);
 
-        assertEquals(expectedData, data.getLineSubset(5));
+        assertEquals(expectedData, data.getLineSubset(5, 7));
 
     }
 
-    @Test
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testGetLineSubsetBiggerThanPossible() {
         List<Column> actualCol = new ArrayList<>();
         List<Integer> col1 = new ArrayList<>();
@@ -542,7 +540,7 @@ public class DataFrameTest {
         actualCol.add(new Column("A", col1));
         DataFrame data = new DataFrame(actualCol);
 
-        assertEquals(data, data.getLineSubset(100));
+        assertEquals(data, data.getLineSubset(100, 100));
 
     }
 

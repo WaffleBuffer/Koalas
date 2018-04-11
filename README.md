@@ -18,8 +18,8 @@ You have some conveniant display features in the form of methods returning a Str
 - get the names of the columns.
 
 This library is also usefull to manage data in the form of methods.
-- get a certain line in the DataFrame.
-- get a certain column in the DataFrame.
+- get some lines in the DataFrame from indexes.
+- get some columns from their names.
 
 To run code coverage :
 
