@@ -40,10 +40,12 @@ public class DataFrame implements IDataFrame {
         setDataset(columns);
     }
 
+    @Override
     public List<Column> getDataset() {
         return dataset;
     }
 
+    @Override
     public void setDataset(List<Column> dataset) throws NoColumnsException {
 
         if (dataset.isEmpty()) {
@@ -230,6 +232,7 @@ public class DataFrame implements IDataFrame {
 
     }
 
+    @Override
     public String getColNames() {
         String ret = "";
         for (Column dataset1 : this.dataset) {

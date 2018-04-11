@@ -239,7 +239,7 @@ public class GroupByTest {
         GroupBy gb = defaultDataFrame.groupBy(cols);
         
         String[] subCols = {"B"};
-        String min = gb.min(subCols);
+        String min = gb.minPrint(subCols);
         
         String expected = "Amin(B)1625";
         assertEquals(expected.replaceAll("\\s+", ""), min.replaceAll("\\s+", ""));
@@ -252,7 +252,7 @@ public class GroupByTest {
         GroupBy gb = defaultDataFrame.groupBy(cols);
         
         String[] subCols = {"B"};
-        String max = gb.max(subCols);
+        String max = gb.maxPrint(subCols);
         
         String expected = "Amax(B)1825";
         assertEquals(expected.replaceAll("\\s+", ""), max.replaceAll("\\s+", ""));
@@ -265,7 +265,7 @@ public class GroupByTest {
         GroupBy gb = defaultDataFrame.groupBy(cols);
         
         String[] subCols = {"B"};
-        String mean = gb.mean(subCols);
+        String mean = gb.meanPrint(subCols);
         
         String expected = "Amean(B)17.025.0";
         assertEquals(expected.replaceAll("\\s+", ""), mean.replaceAll("\\s+", ""));
@@ -278,7 +278,7 @@ public class GroupByTest {
         GroupBy gb = defaultDataFrame.groupBy(cols);
         
         String[] subCols = {"B"};
-        String sum = gb.sum(subCols);
+        String sum = gb.sumPrint(subCols);
         
         String expected = "Asum(B)114.025.0";
         assertEquals(expected.replaceAll("\\s+", ""), sum.replaceAll("\\s+", ""));

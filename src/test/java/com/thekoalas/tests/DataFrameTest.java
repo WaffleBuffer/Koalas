@@ -4,6 +4,7 @@ import com.thekoalas.koalas.Column;
 import com.thekoalas.koalas.ColumnsNotSameSizeException;
 import com.thekoalas.koalas.DataFrame;
 import com.thekoalas.koalas.DateUtile;
+import com.thekoalas.koalas.IDataFrame;
 import com.thekoalas.koalas.NameAlreadyDefinedException;
 import com.thekoalas.koalas.NoColumnsException;
 import com.thekoalas.koalas.NotAsMuchNamesAsColumnsException;
@@ -25,7 +26,7 @@ import static org.junit.Assert.*;
 
 public class DataFrameTest {
 
-    private DataFrame defaultDataFrame;
+    private IDataFrame defaultDataFrame;
 
     public DataFrameTest() {
     }

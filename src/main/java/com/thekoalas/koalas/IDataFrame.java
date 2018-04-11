@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thekoalas.koalas;
 
 import java.util.List;
 
-/**
- *
- * @author zhangna
- */
 public interface IDataFrame {
 
     /**
@@ -79,7 +70,7 @@ public interface IDataFrame {
      * @return the content of all lines from the column names specified in
      * columnNames.
      */
-    public DataFrame getColumnSubset(List<String> columnNames);
+    public IDataFrame getColumnSubset(List<String> columnNames);
     
     /**
      * Returns the content of all lines from the column names specified in
@@ -91,7 +82,7 @@ public interface IDataFrame {
      * @return the content of all lines from the column names specified in
      * columnNames.
      */
-    public DataFrame getColumnSubset(String[] columnNames);
+    public IDataFrame getColumnSubset(String[] columnNames);
     
     /**
      * Display statistics about the Dataframe 
@@ -102,18 +93,33 @@ public interface IDataFrame {
     /**
      * 
      * @param colName The column where the group by has to be made
-     * @param function The function to apply (max, min, sum, avg)
-     * @return The statistics in String format
+     * @return The resulting GroupBy object
      */
     public GroupBy groupBy(List<String> colName);
     
     /**
      * 
      * @param colName The column where the group by has to be made
-     * @param function The function to apply (max, min, sum, avg)
-     * @return The statistics in String format
+     * @return The resulting GroupBy object
      */
     public GroupBy groupBy(String[] colName);
    
-
+    /**
+     * Get a single String containing all columns name separated by a \t.
+     * @return A single String containing all columns name separated by a \t.
+     */
+    public String getColNames();
+    
+    /**
+     * Change the data of this IDataFrame. See constructor for any constraint on the
+     * data set.
+     * @param dataset The new dataset to set.
+     */
+    public void setDataset(List<Column> dataset);
+    
+    /**
+     * Get the columns of this IDataFrame.
+     * @return The columns of this IDataFrame.
+     */
+    public List<Column> getDataset();
 }
