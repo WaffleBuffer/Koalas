@@ -24,20 +24,6 @@ public class GroupBy {
         this.data = data;
     }
 
-    private String colHeaders(int function, List<String> names) {
-        String retour = "";
-        String[] func = {"min(", "max(", "sum(", "mean("};
-        for (int i = 0; i < groupNames.size(); i++) {
-            retour += groupNames.get(i) + "\t";
-        }
-
-        for (int i = 0; i < names.size(); i++) {
-            retour += func[function] + names.get(i) + ")\t";
-        }
-        retour += "\n";
-        return retour;
-    }
-
     public DataFrame min(List<String> names) {
         ArrayList<Column> cols = new ArrayList<>();
         ArrayList<ArrayList<Comparable>> groupValues = new ArrayList<>();
@@ -80,7 +66,7 @@ public class GroupBy {
     }
 
     public String minPrint(String[] names) {
-        return minPrint(new ArrayList(Arrays.asList(names)));
+        return min(names).toString();
     }
 
     public DataFrame max(List<String> names) {
@@ -125,7 +111,7 @@ public class GroupBy {
     }
 
     public String maxPrint(String[] names) {
-        return maxPrint(new ArrayList(Arrays.asList(names)));
+        return max(names).toString();
     }
 
     public DataFrame sum(List<String> names) {
@@ -180,10 +166,10 @@ public class GroupBy {
     }
 
     public String sumPrint(String[] names) {
-        return sumPrint(new ArrayList(Arrays.asList(names)));
+        return sum(names).toString();
     }
 
-    public Comparable checkValues(String name, int index) {
+    private Comparable checkValues(String name, int index) {
         for (int i = 0; i < groupNames.size(); i++) {
             if (name.equals(groupNames.get(i))) {
                 return data.get(index).getGroupValues().get(i);
@@ -244,7 +230,7 @@ public class GroupBy {
     }
 
     public String meanPrint(String[] names) {
-        return meanPrint(new ArrayList(Arrays.asList(names)));
+        return mean(names).toString();
     }
 
     @Override
