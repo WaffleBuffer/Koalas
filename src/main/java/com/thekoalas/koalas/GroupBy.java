@@ -66,7 +66,7 @@ public class GroupBy {
     }
 
     public String minPrint(String[] names) {
-        return min(names).toString();
+        return minPrint(new ArrayList(Arrays.asList(names)));
     }
 
     public DataFrame max(List<String> names) {
@@ -111,7 +111,7 @@ public class GroupBy {
     }
 
     public String maxPrint(String[] names) {
-        return max(names).toString();
+        return maxPrint(new ArrayList(Arrays.asList(names)));
     }
 
     public DataFrame sum(List<String> names) {
@@ -166,7 +166,7 @@ public class GroupBy {
     }
 
     public String sumPrint(String[] names) {
-        return sum(names).toString();
+        return sumPrint(new ArrayList(Arrays.asList(names))).toString();
     }
 
     private Comparable checkValues(String name, int index) {
@@ -230,7 +230,7 @@ public class GroupBy {
     }
 
     public String meanPrint(String[] names) {
-        return mean(names).toString();
+        return meanPrint(new ArrayList(Arrays.asList(names)));
     }
 
     @Override

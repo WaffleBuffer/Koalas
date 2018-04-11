@@ -56,7 +56,7 @@ public abstract class Koalas {
         l2.add(col3);
 
         DataFrame data = new DataFrame(names, l2);
-        DataFrame data3 = data.getLineSubset(3, 3);
+        DataFrame data3 = data.getLineSubset(3,5);
         ArrayList<String> namesR = new ArrayList<>();
         namesR.add("A");
         namesR.add("B");

@@ -304,17 +304,18 @@ public class DataFrame implements IDataFrame {
         if (startIndex < 0 || endIndex < 0 || startIndex >= linesPossible || endIndex >= linesPossible) {
             throw new IndexOutOfBoundsException("Invalid indexes in getLineSubset");
         }
-
         List<Column> cols = new ArrayList<>();
 
         for (int i = 0; i < this.dataset.size(); i++) {
+            int endIndexTmp = endIndex;
             String name = this.dataset.get(i).getName();
             ArrayList list = (ArrayList) ((ArrayList) this.dataset.get(i).getData()).clone();
             for (int j = 0; j < startIndex; j++) {
                 list.remove(0);
-                --endIndex;
+                --endIndexTmp;
             }
-            for (int j = list.size() - 1; j >= endIndex; j--) {
+            for (int j = list.size() - 1; j >= endIndexTmp; j--) {
+                System.out.println("remove");
                 list.remove(list.size() - 1);
             }
             Column toAdd = new Column(name, list);

@@ -102,21 +102,10 @@ public class GroupedData {
         }
         return retour;
     }
-    
-    
-    public String getGroupValuesString(){
-        String retour = " ";
-        for(int i = 0 ; i < groupValues.size();i++){
-            retour += groupValues.get(i) + "\t";
-        }
-        return retour;
-    }
 
     public ArrayList<Comparable> getGroupValues() {
         return groupValues;
     }
-    
-    
 
     @Override
     public boolean equals(Object obj) {
@@ -142,5 +131,4 @@ public class GroupedData {
         return true;
     }
 
-    
 }

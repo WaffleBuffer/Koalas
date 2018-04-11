@@ -14,23 +14,23 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class GroupByTest {
-    
+
     DataFrame defaultDataFrame;
-    
+
     public GroupByTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
-        
+
         ArrayList<Column> list = new ArrayList<Column>();
         ArrayList<Integer> col1IntList = new ArrayList<Integer>();
 
@@ -47,12 +47,12 @@ public class GroupByTest {
 
         defaultDataFrame = new DataFrame(list);
     }
-    
+
     @After
     public void tearDown() {
-        
+
     }
-    
+
     @Test(expected = UnknownNameException.class)
     public void testGroupByUnknownName() {
         ArrayList<String> name = new ArrayList<>();
@@ -189,11 +189,10 @@ public class GroupByTest {
 
         assertEquals(expected.replaceAll("\\s+", ""), g.toString().replaceAll("\\s+", ""));
     }
-    
+
     @Test
     public void testGroupByCompareToOtherMethod() {
-        
-        
+
         ArrayList<String> names = new ArrayList<>();
         names.add("A");
         names.add("B");
@@ -220,73 +219,104 @@ public class GroupByTest {
         l2.add(col3);
 
         DataFrame data = new DataFrame(names, l2);
-        
-        
+
         ArrayList<String> name = new ArrayList<>();
         name.add("A");
         name.add("B");
-        
-        String[] nameTab = {"A","B"};
-        
-        assertEquals(data.groupBy(name),data.groupBy(nameTab));
-    
+
+        String[] nameTab = {"A", "B"};
+
+        assertEquals(data.groupBy(name), data.groupBy(nameTab));
+
     }
-    
+
     @Test
     public void minPrintTest() {
-        
+
         String[] cols = {"A"};
         GroupBy gb = defaultDataFrame.groupBy(cols);
-        
+
         String[] subCols = {"B"};
         String min = gb.minPrint(subCols);
-        
+
         String expected = "Amin(B)1625";
         assertEquals(expected.replaceAll("\\s+", ""), min.replaceAll("\\s+", ""));
     }
-    
+
     @Test
     public void maxPrintTest() {
-        
+
         String[] cols = {"A"};
         GroupBy gb = defaultDataFrame.groupBy(cols);
-        
+
         String[] subCols = {"B"};
         String max = gb.maxPrint(subCols);
-        
+
         String expected = "Amax(B)1825";
         assertEquals(expected.replaceAll("\\s+", ""), max.replaceAll("\\s+", ""));
     }
-    
+
     @Test
     public void meanPrintTest() {
-        
+
         String[] cols = {"A"};
         GroupBy gb = defaultDataFrame.groupBy(cols);
-        
+
         String[] subCols = {"B"};
         String mean = gb.meanPrint(subCols);
-        
+
         String expected = "Amean(B)17.025.0";
         assertEquals(expected.replaceAll("\\s+", ""), mean.replaceAll("\\s+", ""));
     }
-    
+
     @Test
     public void sumPrintTest() {
-        
+
         String[] cols = {"A"};
         GroupBy gb = defaultDataFrame.groupBy(cols);
-        
+
         String[] subCols = {"B"};
         String sum = gb.sumPrint(subCols);
-        
+
         String expected = "Asum(B)114.025.0";
         assertEquals(expected.replaceAll("\\s+", ""), sum.replaceAll("\\s+", ""));
     }
+
+    @Test
+    public void testMin() {
+        String expected = "A    min(A)  min(B)"
+                + "        1    1       6"
+                + "        2    2       5";
+        String[] cols = {"A"};
+        String[] subCols = {"A", "B"};
+
+        assertEquals(expected.replaceAll("\\s+", ""), defaultDataFrame.groupBy(cols).min(subCols).toString().replaceAll("\\s+", ""));
+
+    }
     
     @Test
+    public void testMax() {
+        String expected = "A    max(A)  max(B)"
+                + "        1    1       8"
+                + "        2    2       5";
+        String[] cols = {"A"};
+        String[] subCols = {"A", "B"};
+
+        assertEquals(expected.replaceAll("\\s+", ""), defaultDataFrame.groupBy(cols).max(subCols).toString().replaceAll("\\s+", ""));
+
+    }
+    
+    @Test(expected = UnknownNameException.class)
+    public void testUnknowCol(){
+        String[] cols = {"A"};
+        String[] subCols = {"A", "FAIL"};
+
+        defaultDataFrame.groupBy(cols).max(subCols);
+    }
+
+    @Test
     public void testEquals() {
-        
+
         String[] cols = {"A"};
         GroupBy gb = defaultDataFrame.groupBy(cols);
         assertTrue(gb.equals(gb));
@@ -297,7 +327,7 @@ public class GroupByTest {
         GroupBy gb2 = defaultDataFrame.groupBy(cols);
 
         assertTrue(gb.equals(gb2));
-        
+
         ArrayList<Column> list = new ArrayList<Column>();
         ArrayList<Integer> col1IntList = new ArrayList<Integer>();
 
@@ -316,15 +346,15 @@ public class GroupByTest {
         GroupBy gb3 = defaultDataFrame2.groupBy(cols);
 
         assertFalse(gb.equals(gb3));
-        
+
         String[] cols2 = {"B"};
         GroupBy gb4 = defaultDataFrame.groupBy(cols2);
         assertFalse(gb.equals(gb4));
     }
-    
+
     @Test
     public void checkValuesTest() {
-        
+
         ArrayList<Column> list = new ArrayList<Column>();
         ArrayList<Integer> col1IntList = new ArrayList<Integer>();
 
@@ -336,39 +366,39 @@ public class GroupByTest {
         col2IntList.add(2);
         col2IntList.add(2);
         col2IntList.add(1);
-        
+
         ArrayList<String> col3StrList = new ArrayList<String>();
         col3StrList.add("Koala");
         col3StrList.add("Koala");
         col3StrList.add("patate");
-        
+
         list.add(new Column("A", col1IntList));
         list.add(new Column("B", col2IntList));
         list.add(new Column("C", col3StrList));
 
         DataFrame defaultDataFrame2 = new DataFrame(list);
-        
+
         String[] cols = {"B", "C"};
         GroupBy gb3 = defaultDataFrame2.groupBy(cols);
-        
+
         String[] sumCols = {"A", "B", "C"};
         DataFrame data = gb3.sum(sumCols);
-        
+
         String[] sumCol = {"sum(B)"};
         DataFrame sumData = data.getColumnSubset(sumCol);
-        
+
         assertEquals(1, sumData.getDataset().size());
         Column sumColumn = sumData.getDataset().get(0);
-        
+
         assertEquals(2, sumColumn.getData().size());
-        
+
         assertEquals(2, sumColumn.getData().get(0));
         assertEquals(1, sumColumn.getData().get(1));
     }
-    
+
     @Test
     public void checkValuesTestWithMean() {
-        
+
         ArrayList<Column> list = new ArrayList<Column>();
         ArrayList<Integer> col1IntList = new ArrayList<Integer>();
 
@@ -380,32 +410,32 @@ public class GroupByTest {
         col2IntList.add(2);
         col2IntList.add(2);
         col2IntList.add(1);
-        
+
         ArrayList<String> col3StrList = new ArrayList<String>();
         col3StrList.add("Koala");
         col3StrList.add("Koala");
         col3StrList.add("patate");
-        
+
         list.add(new Column("A", col1IntList));
         list.add(new Column("B", col2IntList));
         list.add(new Column("C", col3StrList));
 
         DataFrame defaultDataFrame2 = new DataFrame(list);
-        
+
         String[] cols = {"B", "C"};
         GroupBy gb3 = defaultDataFrame2.groupBy(cols);
-        
+
         String[] sumCols = {"A", "B", "C"};
         DataFrame data = gb3.mean(sumCols);
-        
+
         String[] sumCol = {"mean(A)"};
         DataFrame sumData = data.getColumnSubset(sumCol);
-        
+
         assertEquals(1, sumData.getDataset().size());
         Column sumColumn = sumData.getDataset().get(0);
-        
+
         assertEquals(2, sumColumn.getData().size());
-        
+
         assertEquals(1.5, sumColumn.getData().get(0));
         assertEquals(3.0, sumColumn.getData().get(1));
     }
