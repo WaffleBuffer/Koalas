@@ -810,7 +810,6 @@ public class DataFrameTest {
 
             DataFrame expectedData = new DataFrame(list);
             DataFrame data = new DataFrame(fileName);
-
             assertEquals(expectedData, data);
         }
     }
