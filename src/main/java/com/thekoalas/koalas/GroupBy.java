@@ -38,16 +38,40 @@ public class GroupBy {
         return retour;
     }
 
-    public ArrayList<ArrayList<Comparable>> min(List<String> names) {
-        ArrayList<ArrayList<Comparable>> retour = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            ArrayList<Comparable> list = data.get(i).min(names);
-            retour.add(list);
+    public DataFrame min(List<String> names) {
+        ArrayList<Column> cols = new ArrayList<>();
+        ArrayList<ArrayList<Comparable>> groupValues = new ArrayList<>();
+        ArrayList<ArrayList<Comparable>> minValues = new ArrayList<>();
+        for (int i = 0; i < this.data.size(); i++) {
+            groupValues.add(this.data.get(i).getGroupValues());
         }
-        return retour;
+        for (int i = 0; i < data.size(); i++) {
+            minValues.add(this.data.get(i).min(names));
+        }
+
+        for (int i = 0; i < groupNames.size(); i++) {
+            String name = groupNames.get(i);
+            ArrayList<Comparable> colValues = new ArrayList<>();
+            for (int j = 0; j < data.size(); j++) {
+                colValues.add(groupValues.get(j).get(i));
+            }
+            cols.add(new Column(name, colValues));
+        }
+
+        for (int i = 0; i < names.size(); i++) {
+            String name = "min(" + names.get(i) + ")";
+            ArrayList<Comparable> colValues = new ArrayList<>();
+            for (int j = 0; j < data.size(); j++) {
+                colValues.add(minValues.get(j).get(i));
+            }
+            cols.add(new Column(name, colValues));
+        }
+
+        DataFrame d = new DataFrame(cols);
+        return d;
     }
-    
-     public ArrayList<ArrayList<Comparable>> min(String[] names) {
+
+    public DataFrame min(String[] names) {
         return min(new ArrayList(Arrays.asList(names)));
     }
 
@@ -55,7 +79,7 @@ public class GroupBy {
         String retour = colHeaders(0, names);
         for (int i = 0; i < data.size(); i++) {
             ArrayList<Comparable> list = data.get(i).min(names);
-            retour += data.get(i).getGroupValues();
+            retour += data.get(i).getGroupValuesString();
             for (int j = 0; j < list.size(); j++) {
                 retour += list.get(j) + "\t";
             }
@@ -68,16 +92,41 @@ public class GroupBy {
         return minPrint(new ArrayList(Arrays.asList(names)));
     }
 
-    public ArrayList<ArrayList<Comparable>> max(List<String> names) {
-        ArrayList<ArrayList<Comparable>> retour = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            ArrayList<Comparable> list = data.get(i).max(names);
-            retour.add(list);
+    public DataFrame max(List<String> names) {
+        ArrayList<Column> cols = new ArrayList<>();
+        ArrayList<ArrayList<Comparable>> groupValues = new ArrayList<>();
+        ArrayList<ArrayList<Comparable>> maxValues = new ArrayList<>();
+        for (int i = 0; i < this.data.size(); i++) {
+            groupValues.add(this.data.get(i).getGroupValues());
         }
-        return retour;
+        for (int i = 0; i < data.size(); i++) {
+            maxValues.add(this.data.get(i).max(names));
+        }
+        System.out.println("Group " + groupValues);
+
+        for (int i = 0; i < groupNames.size(); i++) {
+            String name = groupNames.get(i);
+            ArrayList<Comparable> colValues = new ArrayList<>();
+            for (int j = 0; j < data.size(); j++) {
+                colValues.add(groupValues.get(j).get(i));
+            }
+            cols.add(new Column(name, colValues));
+        }
+
+        for (int i = 0; i < names.size(); i++) {
+            String name = "max(" + names.get(i) + ")";
+            ArrayList<Comparable> colValues = new ArrayList<>();
+            for (int j = 0; j < data.size(); j++) {
+                colValues.add(maxValues.get(j).get(i));
+            }
+            cols.add(new Column(name, colValues));
+        }
+
+        DataFrame d = new DataFrame(cols);
+        return d;
     }
-    
-    public ArrayList<ArrayList<Comparable>> max(String[] names) {
+
+    public DataFrame max(String[] names) {
         return max(new ArrayList(Arrays.asList(names)));
     }
 
@@ -85,7 +134,7 @@ public class GroupBy {
         String retour = colHeaders(1, names);
         for (int i = 0; i < data.size(); i++) {
             ArrayList<Comparable> list = data.get(i).max(names);
-            retour += data.get(i).getGroupValues();
+            retour += data.get(i).getGroupValuesString();
             for (int j = 0; j < list.size(); j++) {
                 retour += list.get(j) + "\t";
             }
@@ -98,17 +147,42 @@ public class GroupBy {
         return maxPrint(new ArrayList(Arrays.asList(names)));
     }
 
-    public ArrayList<ArrayList<Double>> sum(List<String> names) {
-        ArrayList<ArrayList<Double>> retour = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            ArrayList<Double> list = data.get(i).sum(names);
-            retour.add(list);
+    public DataFrame sum(List<String> names) {
+        ArrayList<Column> cols = new ArrayList<>();
+        ArrayList<ArrayList<Comparable>> groupValues = new ArrayList<>();
+        ArrayList<ArrayList<Double>> sumValues = new ArrayList<>();
+        for (int i = 0; i < this.data.size(); i++) {
+            groupValues.add(this.data.get(i).getGroupValues());
         }
-        return retour;
+        for (int i = 0; i < data.size(); i++) {
+            sumValues.add(this.data.get(i).sum(names));
+        }
+        System.out.println("Group " + groupValues);
+
+        for (int i = 0; i < groupNames.size(); i++) {
+            String name = groupNames.get(i);
+            ArrayList<Comparable> colValues = new ArrayList<>();
+            for (int j = 0; j < data.size(); j++) {
+                colValues.add(groupValues.get(j).get(i));
+            }
+            cols.add(new Column(name, colValues));
+        }
+
+        for (int i = 0; i < names.size(); i++) {
+            String name = "sum(" + names.get(i) + ")";
+            ArrayList<Comparable> colValues = new ArrayList<>();
+            for (int j = 0; j < data.size(); j++) {
+                colValues.add(sumValues.get(j).get(i));
+            }
+            cols.add(new Column(name, colValues));
+        }
+
+        DataFrame d = new DataFrame(cols);
+        return d;
 
     }
 
-    public ArrayList<ArrayList<Double>> sum(String[] names) {
+    public DataFrame sum(String[] names) {
         return sum(new ArrayList(Arrays.asList(names)));
     }
 
@@ -116,7 +190,7 @@ public class GroupBy {
         String retour = colHeaders(2, names);
         for (int i = 0; i < data.size(); i++) {
             ArrayList<Double> list = data.get(i).sum(names);
-            retour += data.get(i).getGroupValues();
+            retour += data.get(i).getGroupValuesString();
             for (int j = 0; j < list.size(); j++) {
                 retour += list.get(j) + "\t";
             }
@@ -129,16 +203,41 @@ public class GroupBy {
         return sumPrint(new ArrayList(Arrays.asList(names)));
     }
 
-    public ArrayList<ArrayList<Double>> mean(List<String> names) {
-        ArrayList<ArrayList<Double>> retour = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            ArrayList<Double> list = data.get(i).mean(names);
-            retour.add(list);
+    public DataFrame mean(List<String> names) {
+        ArrayList<Column> cols = new ArrayList<>();
+        ArrayList<ArrayList<Comparable>> groupValues = new ArrayList<>();
+        ArrayList<ArrayList<Double>> meanValues = new ArrayList<>();
+        for (int i = 0; i < this.data.size(); i++) {
+            groupValues.add(this.data.get(i).getGroupValues());
         }
-        return retour;
+        for (int i = 0; i < data.size(); i++) {
+            meanValues.add(this.data.get(i).mean(names));
+        }
+        System.out.println("Group " + groupValues);
+
+        for (int i = 0; i < groupNames.size(); i++) {
+            String name = groupNames.get(i);
+            ArrayList<Comparable> colValues = new ArrayList<>();
+            for (int j = 0; j < data.size(); j++) {
+                colValues.add(groupValues.get(j).get(i));
+            }
+            cols.add(new Column(name, colValues));
+        }
+
+        for (int i = 0; i < names.size(); i++) {
+            String name = "mean(" + names.get(i) + ")";
+            ArrayList<Comparable> colValues = new ArrayList<>();
+            for (int j = 0; j < data.size(); j++) {
+                colValues.add(meanValues.get(j).get(i));
+            }
+            cols.add(new Column(name, colValues));
+        }
+
+        DataFrame d = new DataFrame(cols);
+        return d;
     }
 
-    public ArrayList<ArrayList<Double>> mean(String[] names) {
+    public DataFrame mean(String[] names) {
         return mean(new ArrayList(Arrays.asList(names)));
     }
 
@@ -146,7 +245,7 @@ public class GroupBy {
         String retour = colHeaders(3, names);
         for (int i = 0; i < data.size(); i++) {
             ArrayList<Double> list = data.get(i).mean(names);
-            retour += data.get(i).getGroupValues();
+            retour += data.get(i).getGroupValuesString();
             for (int j = 0; j < list.size(); j++) {
                 retour += list.get(j) + "\t";
             }
