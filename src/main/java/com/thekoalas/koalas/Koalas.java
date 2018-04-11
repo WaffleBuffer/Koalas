@@ -77,7 +77,9 @@ public abstract class Koalas {
         l.add("country");
 
         l = new ArrayList<>();
+        l.add("A");
         l.add("B");
+        l.add("C");
         
         List<String> l100 = new ArrayList<>();
         l100.add("A");

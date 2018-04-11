@@ -102,7 +102,6 @@ public class GroupBy {
         for (int i = 0; i < data.size(); i++) {
             maxValues.add(this.data.get(i).max(names));
         }
-        System.out.println("Group " + groupValues);
 
         for (int i = 0; i < groupNames.size(); i++) {
             String name = groupNames.get(i);
@@ -157,7 +156,6 @@ public class GroupBy {
         for (int i = 0; i < data.size(); i++) {
             sumValues.add(this.data.get(i).sum(names));
         }
-        System.out.println("Group " + groupValues);
 
         for (int i = 0; i < groupNames.size(); i++) {
             String name = groupNames.get(i);
@@ -172,7 +170,16 @@ public class GroupBy {
             String name = "sum(" + names.get(i) + ")";
             ArrayList<Comparable> colValues = new ArrayList<>();
             for (int j = 0; j < data.size(); j++) {
-                colValues.add(sumValues.get(j).get(i));
+                if (groupNames.contains(names.get(i))) {
+                    Comparable val = checkValues(names.get(i), j);
+                    if (val instanceof Number) {
+                        colValues.add(val);
+                    } else {
+                        colValues.add(Double.NaN);
+                    }
+                } else {
+                    colValues.add(sumValues.get(j).get(i));
+                }
             }
             cols.add(new Column(name, colValues));
         }
@@ -203,6 +210,15 @@ public class GroupBy {
         return sumPrint(new ArrayList(Arrays.asList(names)));
     }
 
+    public Comparable checkValues(String name, int index) {
+        for (int i = 0; i < groupNames.size(); i++) {
+            if (name.equals(groupNames.get(i))) {
+                return data.get(index).getGroupValues().get(i);
+            }
+        }
+        return null;
+    }
+
     public DataFrame mean(List<String> names) {
         ArrayList<Column> cols = new ArrayList<>();
         ArrayList<ArrayList<Comparable>> groupValues = new ArrayList<>();
@@ -213,7 +229,6 @@ public class GroupBy {
         for (int i = 0; i < data.size(); i++) {
             meanValues.add(this.data.get(i).mean(names));
         }
-        System.out.println("Group " + groupValues);
 
         for (int i = 0; i < groupNames.size(); i++) {
             String name = groupNames.get(i);
@@ -226,9 +241,19 @@ public class GroupBy {
 
         for (int i = 0; i < names.size(); i++) {
             String name = "mean(" + names.get(i) + ")";
+
             ArrayList<Comparable> colValues = new ArrayList<>();
             for (int j = 0; j < data.size(); j++) {
-                colValues.add(meanValues.get(j).get(i));
+                if (groupNames.contains(names.get(i))) {
+                    Comparable val = checkValues(names.get(i), j);
+                    if (val instanceof Number) {
+                        colValues.add(val);
+                    } else {
+                        colValues.add(Double.NaN);
+                    }
+                } else {
+                    colValues.add(meanValues.get(j).get(i));
+                }
             }
             cols.add(new Column(name, colValues));
         }
