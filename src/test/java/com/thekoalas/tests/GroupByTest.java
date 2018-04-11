@@ -321,4 +321,48 @@ public class GroupByTest {
         GroupBy gb4 = defaultDataFrame.groupBy(cols2);
         assertFalse(gb.equals(gb4));
     }
+    
+    @Test
+    public void checkValuesTest() {
+        
+        ArrayList<Column> list = new ArrayList<Column>();
+        ArrayList<Integer> col1IntList = new ArrayList<Integer>();
+
+        col1IntList.add(1);
+        col1IntList.add(2);
+        col1IntList.add(3);
+
+        ArrayList<Integer> col2IntList = new ArrayList<Integer>();
+        col2IntList.add(2);
+        col2IntList.add(2);
+        col2IntList.add(1);
+        
+        ArrayList<String> col3StrList = new ArrayList<String>();
+        col3StrList.add("Koala");
+        col3StrList.add("Koala");
+        col3StrList.add("patate");
+        
+        list.add(new Column("A", col1IntList));
+        list.add(new Column("B", col2IntList));
+        list.add(new Column("C", col3StrList));
+
+        DataFrame defaultDataFrame2 = new DataFrame(list);
+        
+        String[] cols = {"B", "C"};
+        GroupBy gb3 = defaultDataFrame2.groupBy(cols);
+        
+        String[] sumCols = {"A", "B", "C"};
+        DataFrame data = gb3.sum(sumCols);
+        
+        String[] sumCol = {"sum(B)"};
+        DataFrame sumData = data.getColumnSubset(sumCol);
+        
+        assertEquals(1, sumData.getDataset().size());
+        Column sumColumn = sumData.getDataset().get(0);
+        
+        assertEquals(2, sumColumn.getData().size());
+        
+        assertEquals(2, sumColumn.getData().get(0));
+        assertEquals(1, sumColumn.getData().get(1));
+    }
 }

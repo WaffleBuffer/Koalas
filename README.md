@@ -20,7 +20,22 @@ You have some conveniant display features in the form of methods returning a Str
 This library is also usefull to manage data in the form of methods.
 - get some lines in the DataFrame from indexes.
 - get some columns from their names.
+- get all the data.
+
+Finally you can use GroupBy operation (like in SQL). This will return a GroupBy
+object on which you can then apply some mathematical operations which will return
+a sub DataFrame.
+
+# Maven use
+
+To get the library JAR file :
+
+mvn clean package
+
+It will then be located in ./target/Koala-<Version>.jar
 
 To run code coverage :
 
 mvn clean jacoco:prepare-agent install jacoco:report
+
+The report will be located in ./target/
