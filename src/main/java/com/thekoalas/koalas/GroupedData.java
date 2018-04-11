@@ -63,6 +63,12 @@ public class GroupedData {
         }
         return retour;
     }
+    public Comparable checkValues(String name){
+        for(int i=0; i < groupNames.size();i++){
+            
+        }
+        return null;
+    }
 
     public ArrayList<Double> sum(List<String> names) {
 

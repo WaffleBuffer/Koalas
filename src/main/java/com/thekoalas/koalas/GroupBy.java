@@ -19,7 +19,7 @@ public class GroupBy {
     private List<String> groupNames;
     private List<GroupedData> data;
 
-    public GroupBy(List<String> groupNames,List<GroupedData> data) {
+    public GroupBy(List<String> groupNames, List<GroupedData> data) {
         this.groupNames = groupNames;
         this.data = data;
     }
@@ -38,85 +38,135 @@ public class GroupBy {
         return retour;
     }
 
-    public String min(List<String> names) {
+    public ArrayList<ArrayList<Comparable>> min(List<String> names) {
+        ArrayList<ArrayList<Comparable>> retour = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            ArrayList<Comparable> list = data.get(i).min(names);
+            retour.add(list);
+        }
+        return retour;
+    }
+    
+     public ArrayList<ArrayList<Comparable>> min(String[] names) {
+        return min(new ArrayList(Arrays.asList(names)));
+    }
+
+    public String minPrint(List<String> names) {
         String retour = colHeaders(0, names);
         for (int i = 0; i < data.size(); i++) {
             ArrayList<Comparable> list = data.get(i).min(names);
             retour += data.get(i).getGroupValues();
-            for(int j = 0; j < list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 retour += list.get(j) + "\t";
             }
             retour += "\n";
         }
         return retour;
     }
-    
-    public String min(String[] names){
-        return min(new ArrayList(Arrays.asList(names)));
+
+    public String minPrint(String[] names) {
+        return minPrint(new ArrayList(Arrays.asList(names)));
+    }
+
+    public ArrayList<ArrayList<Comparable>> max(List<String> names) {
+        ArrayList<ArrayList<Comparable>> retour = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            ArrayList<Comparable> list = data.get(i).max(names);
+            retour.add(list);
+        }
+        return retour;
     }
     
+    public ArrayList<ArrayList<Comparable>> max(String[] names) {
+        return max(new ArrayList(Arrays.asList(names)));
+    }
 
-    public String max(List<String> names) {
+    public String maxPrint(List<String> names) {
         String retour = colHeaders(1, names);
         for (int i = 0; i < data.size(); i++) {
             ArrayList<Comparable> list = data.get(i).max(names);
             retour += data.get(i).getGroupValues();
-            for(int j = 0; j < list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 retour += list.get(j) + "\t";
             }
             retour += "\n";
         }
         return retour;
     }
-    
-    public String max(String[] names){
-        return max(new ArrayList(Arrays.asList(names)));
+
+    public String maxPrint(String[] names) {
+        return maxPrint(new ArrayList(Arrays.asList(names)));
     }
 
-    public String sum(List<String> names) {
+    public ArrayList<ArrayList<Double>> sum(List<String> names) {
+        ArrayList<ArrayList<Double>> retour = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            ArrayList<Double> list = data.get(i).sum(names);
+            retour.add(list);
+        }
+        return retour;
+
+    }
+
+    public ArrayList<ArrayList<Double>> sum(String[] names) {
+        return sum(new ArrayList(Arrays.asList(names)));
+    }
+
+    public String sumPrint(List<String> names) {
         String retour = colHeaders(2, names);
         for (int i = 0; i < data.size(); i++) {
             ArrayList<Double> list = data.get(i).sum(names);
             retour += data.get(i).getGroupValues();
-            for(int j = 0; j < list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 retour += list.get(j) + "\t";
             }
             retour += "\n";
         }
         return retour;
     }
-    
-    public String sum(String[] names){
-        return sum(new ArrayList(Arrays.asList(names)));
+
+    public String sumPrint(String[] names) {
+        return sumPrint(new ArrayList(Arrays.asList(names)));
     }
 
-    public String mean(List<String> names) {
+    public ArrayList<ArrayList<Double>> mean(List<String> names) {
+        ArrayList<ArrayList<Double>> retour = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            ArrayList<Double> list = data.get(i).mean(names);
+            retour.add(list);
+        }
+        return retour;
+    }
+
+    public ArrayList<ArrayList<Double>> mean(String[] names) {
+        return mean(new ArrayList(Arrays.asList(names)));
+    }
+
+    public String meanPrint(List<String> names) {
         String retour = colHeaders(3, names);
         for (int i = 0; i < data.size(); i++) {
             ArrayList<Double> list = data.get(i).mean(names);
             retour += data.get(i).getGroupValues();
-            for(int j = 0; j < list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 retour += list.get(j) + "\t";
             }
             retour += "\n";
         }
         return retour;
     }
-    
-    public String mean(String[] names){
-        return mean(new ArrayList(Arrays.asList(names)));
+
+    public String meanPrint(String[] names) {
+        return meanPrint(new ArrayList(Arrays.asList(names)));
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         String retour = "";
-        for(int i = 0; i < data.size();i++){
+        for (int i = 0; i < data.size(); i++) {
             retour += data.get(i).toString();
         }
         return retour;
     }
-
-
 
     @Override
     public boolean equals(Object obj) {
@@ -135,6 +185,5 @@ public class GroupBy {
         }
         return true;
     }
-    
-    
+
 }
