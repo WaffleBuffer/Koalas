@@ -38,4 +38,4 @@ To run code coverage :
 
 mvn clean jacoco:prepare-agent install jacoco:report
 
-The report will be located in ./target/
+The report will be located in ./target/site/jacoco/index.html (open it with an internet browser)
