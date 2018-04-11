@@ -159,6 +159,15 @@ public class DataFrameTest {
     }
 
     @Test
+    public void testGetColumnSubsetTab() {
+        List<String> subset = new ArrayList<String>();
+        subset.add("A");
+        String[] subTab = {"A"};
+        
+        assertEquals(defaultDataFrame.getColumnSubset(subset), defaultDataFrame.getColumnSubset(subTab));
+    }
+
+    @Test
     public void testStatistics() {
 
         String colBRow1 = "Row1";
@@ -221,21 +230,21 @@ public class DataFrameTest {
     public void testDisplay() {
 
         /*
-        * We can't get to the code that return "Trying to print an empty dataset"
-        * but we let it anyway for protection.
+         * We can't get to the code that return "Trying to print an empty dataset"
+         * but we let it anyway for protection.
          */
- /*ArrayList<Column> list = new ArrayList<Column>();
-        ArrayList<Integer> col1IntList = new ArrayList<>();
-        col1IntList.add(1);
-        list.add(new Column("A", col1IntList));
+        /*ArrayList<Column> list = new ArrayList<Column>();
+         ArrayList<Integer> col1IntList = new ArrayList<>();
+         col1IntList.add(1);
+         list.add(new Column("A", col1IntList));
         
-        DataFrame data = new DataFrame(list);
-        ArrayList<String> columnNames = new ArrayList<String>();
-        columnNames.add("B");
-        data = data.getColumnSubset(columnNames);
+         DataFrame data = new DataFrame(list);
+         ArrayList<String> columnNames = new ArrayList<String>();
+         columnNames.add("B");
+         data = data.getColumnSubset(columnNames);
         
-        String expected = "Trying to print an empty dataset";
-        assertEquals(expected.replaceAll("\\s+", ""), data.display().replaceAll("\\s+", ""));*/
+         String expected = "Trying to print an empty dataset";
+         assertEquals(expected.replaceAll("\\s+", ""), data.display().replaceAll("\\s+", ""));*/
     }
 
     @Test
@@ -1037,5 +1046,47 @@ public class DataFrameTest {
                 + "1	2	Deux	";
 
         assertEquals(expected.replaceAll("\\s+", ""), g.toString().replaceAll("\\s+", ""));
+    }
+    
+    @Test
+    public void testGroupByCompareToOtherMethod() {
+        
+        
+        ArrayList<String> names = new ArrayList<>();
+        names.add("A");
+        names.add("B");
+        names.add("C");
+
+        ArrayList<Integer> col1 = new ArrayList<>();
+        col1.add(1);
+        col1.add(1);
+        col1.add(3);
+        col1.add(4);
+        ArrayList<Integer> col2 = new ArrayList<>();
+        col2.add(2);
+        col2.add(2);
+        col2.add(3);
+        col2.add(4);
+        ArrayList<String> col3 = new ArrayList<>();
+        col3.add("Un");
+        col3.add("Deux");
+        col3.add("Trois");
+        col3.add("Quatre");
+        List<List<? extends Comparable>> l2 = new ArrayList<>();
+        l2.add(col1);
+        l2.add(col2);
+        l2.add(col3);
+
+        DataFrame data = new DataFrame(names, l2);
+        
+        
+        ArrayList<String> name = new ArrayList<>();
+        name.add("A");
+        name.add("B");
+        
+        String[] nameTab = {"A","B"};
+        
+        assertEquals(data.groupBy(name),data.groupBy(nameTab));
+    
     }
 }

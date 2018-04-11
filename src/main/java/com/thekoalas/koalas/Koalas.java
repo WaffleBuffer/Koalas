@@ -78,7 +78,11 @@ public abstract class Koalas {
 
         l = new ArrayList<>();
         l.add("B");
-        System.out.println(data.groupBy(l));
+        
+        List<String> l100 = new ArrayList<>();
+        l100.add("A");
+        
+        System.out.println(data.groupBy(l).max(l100));
     }
 
     public static String hello() {

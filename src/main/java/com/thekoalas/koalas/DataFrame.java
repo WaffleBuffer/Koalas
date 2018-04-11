@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -365,6 +366,12 @@ public class DataFrame implements IDataFrame {
     }
 
     @Override
+    public DataFrame getColumnSubset(String[] columnNames) {
+
+        return getColumnSubset(new ArrayList(Arrays.asList(columnNames)));
+    }
+
+    @Override
     public String toString() {
         return display();
     }
@@ -399,7 +406,13 @@ public class DataFrame implements IDataFrame {
 
         return retour;
     }
+    
+    @Override
+    public GroupBy groupBy(String[] colName) {
+        return groupBy(new ArrayList(Arrays.asList(colName)));
+    }
 
+    @Override
     public GroupBy groupBy(List<String> colName) {
         List<Integer> colIndices = new ArrayList<>();
         for (int j = 0; j < colName.size(); j++) {
@@ -454,14 +467,14 @@ public class DataFrame implements IDataFrame {
                 }
                 Column colCreated = new Column(name, values);
                 cols.add(colCreated);
-                
+
             }
             GroupedData d = new GroupedData(listGroup.get(i), colName, cols, mapValues.get(listGroup.get(i)));
             groupD.add(d);
-            
+
         }
-        GroupBy g = new GroupBy(colName,groupD);
-        
+        GroupBy g = new GroupBy(colName, groupD);
+
         return g;
     }
 

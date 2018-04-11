@@ -7,6 +7,7 @@ package com.thekoalas.koalas;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -109,4 +110,34 @@ public class GroupedData {
         }
         return retour;
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final GroupedData other = (GroupedData) obj;
+        if (!Objects.equals(this.groupId, other.groupId)) {
+            return false;
+        }
+        if (!Objects.equals(this.groupNames, other.groupNames)) {
+            return false;
+        }
+        if (!Objects.equals(this.columns, other.columns)) {
+            return false;
+        }
+        if (!Objects.equals(this.groupValues, other.groupValues)) {
+            return false;
+        }
+        return true;
+    }
+
+  
+
+    
+    
 }
