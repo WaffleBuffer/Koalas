@@ -77,8 +77,6 @@ public abstract class Koalas {
         l.add("country");
 
         l = new ArrayList<>();
-        l.add("A");
-        l.add("B");
         l.add("C");
         
         List<String> l100 = new ArrayList<>();
@@ -86,7 +84,7 @@ public abstract class Koalas {
         l100.add("B");
         l100.add("C");
         
-        System.out.println(data.groupBy(l).mean(l100));
+        System.out.println(data.groupBy(l));
     }
 
     public static String hello() {
