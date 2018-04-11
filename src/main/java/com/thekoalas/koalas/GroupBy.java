@@ -76,16 +76,7 @@ public class GroupBy {
     }
 
     public String minPrint(List<String> names) {
-        String retour = colHeaders(0, names);
-        for (int i = 0; i < data.size(); i++) {
-            ArrayList<Comparable> list = data.get(i).min(names);
-            retour += data.get(i).getGroupValuesString();
-            for (int j = 0; j < list.size(); j++) {
-                retour += list.get(j) + "\t";
-            }
-            retour += "\n";
-        }
-        return retour;
+        return min(names).toString();
     }
 
     public String minPrint(String[] names) {
@@ -130,16 +121,7 @@ public class GroupBy {
     }
 
     public String maxPrint(List<String> names) {
-        String retour = colHeaders(1, names);
-        for (int i = 0; i < data.size(); i++) {
-            ArrayList<Comparable> list = data.get(i).max(names);
-            retour += data.get(i).getGroupValuesString();
-            for (int j = 0; j < list.size(); j++) {
-                retour += list.get(j) + "\t";
-            }
-            retour += "\n";
-        }
-        return retour;
+        return max(names).toString();
     }
 
     public String maxPrint(String[] names) {
@@ -194,16 +176,7 @@ public class GroupBy {
     }
 
     public String sumPrint(List<String> names) {
-        String retour = colHeaders(2, names);
-        for (int i = 0; i < data.size(); i++) {
-            ArrayList<Double> list = data.get(i).sum(names);
-            retour += data.get(i).getGroupValuesString();
-            for (int j = 0; j < list.size(); j++) {
-                retour += list.get(j) + "\t";
-            }
-            retour += "\n";
-        }
-        return retour;
+        return sum(names).toString();
     }
 
     public String sumPrint(String[] names) {
@@ -267,16 +240,7 @@ public class GroupBy {
     }
 
     public String meanPrint(List<String> names) {
-        String retour = colHeaders(3, names);
-        for (int i = 0; i < data.size(); i++) {
-            ArrayList<Double> list = data.get(i).mean(names);
-            retour += data.get(i).getGroupValuesString();
-            for (int j = 0; j < list.size(); j++) {
-                retour += list.get(j) + "\t";
-            }
-            retour += "\n";
-        }
-        return retour;
+        return mean(names).toString();
     }
 
     public String meanPrint(String[] names) {
