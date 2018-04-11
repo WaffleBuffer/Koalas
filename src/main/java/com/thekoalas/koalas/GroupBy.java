@@ -6,7 +6,9 @@
 package com.thekoalas.koalas;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -48,6 +50,11 @@ public class GroupBy {
         }
         return retour;
     }
+    
+    public String min(String[] names){
+        return min(new ArrayList(Arrays.asList(names)));
+    }
+    
 
     public String max(List<String> names) {
         String retour = colHeaders(1, names);
@@ -61,6 +68,10 @@ public class GroupBy {
         }
         return retour;
     }
+    
+    public String max(String[] names){
+        return max(new ArrayList(Arrays.asList(names)));
+    }
 
     public String sum(List<String> names) {
         String retour = colHeaders(2, names);
@@ -73,6 +84,10 @@ public class GroupBy {
             retour += "\n";
         }
         return retour;
+    }
+    
+    public String sum(String[] names){
+        return sum(new ArrayList(Arrays.asList(names)));
     }
 
     public String mean(List<String> names) {
@@ -88,6 +103,10 @@ public class GroupBy {
         return retour;
     }
     
+    public String mean(String[] names){
+        return mean(new ArrayList(Arrays.asList(names)));
+    }
+    
     @Override
     public String toString(){
         String retour = "";
@@ -96,4 +115,26 @@ public class GroupBy {
         }
         return retour;
     }
+
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final GroupBy other = (GroupBy) obj;
+        if (!Objects.equals(this.groupNames, other.groupNames)) {
+            return false;
+        }
+        if (!Objects.equals(this.data, other.data)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

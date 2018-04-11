@@ -82,6 +82,18 @@ public interface IDataFrame {
     public DataFrame getColumnSubset(List<String> columnNames);
     
     /**
+     * Returns the content of all lines from the column names specified in
+     * columnNames.
+     *
+     * Invalid names can be provided, no warning will be displayed.
+     *
+     * @param columnNames The name of the columns which should be displayed
+     * @return the content of all lines from the column names specified in
+     * columnNames.
+     */
+    public DataFrame getColumnSubset(String[] columnNames);
+    
+    /**
      * Display statistics about the Dataframe 
      * @return The statistics in String format
      */
@@ -94,6 +106,14 @@ public interface IDataFrame {
      * @return The statistics in String format
      */
     public GroupBy groupBy(List<String> colName);
+    
+    /**
+     * 
+     * @param colName The column where the group by has to be made
+     * @param function The function to apply (max, min, sum, avg)
+     * @return The statistics in String format
+     */
+    public GroupBy groupBy(String[] colName);
    
 
 }
