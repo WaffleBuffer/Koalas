@@ -391,6 +391,16 @@ public class DataFrame implements IDataFrame {
 
         return retour;
     }
+    
+    @Override
+    public GroupBy groupBy(String name1, String... names){
+        ArrayList<String> namesToPass = new ArrayList<>();
+        namesToPass.add(name1);
+        for (String s : names) {
+            namesToPass.add(s);
+        }
+        return groupBy(namesToPass);
+    }
 
     @Override
     public GroupBy groupBy(String[] colName) {

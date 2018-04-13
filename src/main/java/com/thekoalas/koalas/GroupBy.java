@@ -61,6 +61,15 @@ public class GroupBy {
         return min(new ArrayList(Arrays.asList(names)));
     }
 
+    public DataFrame min(String name1, String... names) {
+        ArrayList<String> namesToPass = new ArrayList<>();
+        namesToPass.add(name1);
+        for (String s : names) {
+            namesToPass.add(s);
+        }
+        return min(namesToPass);
+    }
+
     public String minPrint(List<String> names) {
         return min(names).toString();
     }
@@ -104,6 +113,15 @@ public class GroupBy {
 
     public DataFrame max(String[] names) {
         return max(new ArrayList(Arrays.asList(names)));
+    }
+    
+    public DataFrame max(String name1, String... names) {
+        ArrayList<String> namesToPass = new ArrayList<>();
+        namesToPass.add(name1);
+        for (String s : names) {
+            namesToPass.add(s);
+        }
+        return max(namesToPass);
     }
 
     public String maxPrint(List<String> names) {
@@ -160,22 +178,32 @@ public class GroupBy {
     public DataFrame sum(String[] names) {
         return sum(new ArrayList(Arrays.asList(names)));
     }
+    
+    public DataFrame sum(String name1, String... names) {
+        ArrayList<String> namesToPass = new ArrayList<>();
+        namesToPass.add(name1);
+        for (String s : names) {
+            namesToPass.add(s);
+        }
+        return sum(namesToPass);
+    }
 
     public String sumPrint(List<String> names) {
         return sum(names).toString();
     }
 
     public String sumPrint(String[] names) {
-        return sumPrint(new ArrayList(Arrays.asList(names))).toString();
+        return sumPrint(new ArrayList(Arrays.asList(names)));
     }
 
     private Comparable checkValues(String name, int index) {
-        for (int i = 0; i < groupNames.size(); i++) {
+        Comparable retour = null;
+        for (int i = 0; i < groupNames.size() && retour == null; i++) {
             if (name.equals(groupNames.get(i))) {
-                return data.get(index).getGroupValues().get(i);
+                retour =  data.get(index).getGroupValues().get(i);
             }
         }
-        return null;
+        return retour;
     }
 
     public DataFrame mean(List<String> names) {
@@ -223,6 +251,15 @@ public class GroupBy {
 
     public DataFrame mean(String[] names) {
         return mean(new ArrayList(Arrays.asList(names)));
+    }
+    
+    public DataFrame mean(String name1, String... names) {
+        ArrayList<String> namesToPass = new ArrayList<>();
+        namesToPass.add(name1);
+        for (String s : names) {
+            namesToPass.add(s);
+        }
+        return mean(namesToPass);
     }
 
     public String meanPrint(List<String> names) {

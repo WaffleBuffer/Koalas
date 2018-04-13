@@ -143,6 +143,45 @@ public class GroupByTest {
     }
 
     @Test
+    public void testGroupByVariadicNames() {
+        ArrayList<String> names = new ArrayList<>();
+        names.add("A");
+        names.add("B");
+        names.add("C");
+
+        ArrayList<Integer> col1 = new ArrayList<>();
+        col1.add(1);
+        col1.add(2);
+        col1.add(3);
+        ArrayList<Integer> col2 = new ArrayList<>();
+        col2.add(2);
+        col2.add(2);
+        col2.add(3);
+        ArrayList<String> col3 = new ArrayList<>();
+        col3.add("Un");
+        col3.add("Deux");
+        col3.add("Trois");
+        List<List<? extends Comparable<?>>> l2 = new ArrayList<>();
+        l2.add(col1);
+        l2.add(col2);
+        l2.add(col3);
+
+        DataFrame data = new DataFrame(names, l2);
+
+        GroupBy g = data.groupBy("B");
+
+        String expected = "Grouped by [B]\n"
+                + "A	 B	 C	 \n"
+                + "1	2	Un	\n"
+                + "2	2	Deux	\n"
+                + "Grouped by [B]\n"
+                + "A	 B	 C	 \n"
+                + "3	3	Trois	";
+
+        assertEquals(expected.replaceAll("\\s+", ""), g.toString().replaceAll("\\s+", ""));
+    }
+
+    @Test
     public void testGroupBySeveralColumnsSeveralGroups() {
         ArrayList<String> names = new ArrayList<>();
         names.add("A");
@@ -175,6 +214,51 @@ public class GroupByTest {
         toGroup.add("A");
         toGroup.add("B");
         GroupBy g = data.groupBy(toGroup);
+
+        String expected = "Grouped by [A, B]\n"
+                + "A	 B	 C	 \n"
+                + "3	3	Trois	\n"
+                + "Grouped by [A, B]\n"
+                + "A	 B	 C	 \n"
+                + "4	4	Quatre	\n"
+                + "Grouped by [A, B]\n"
+                + "A	 B	 C	 \n"
+                + "1	2	Un	\n"
+                + "1	2	Deux	";
+
+        assertEquals(expected.replaceAll("\\s+", ""), g.toString().replaceAll("\\s+", ""));
+    }
+
+    @Test
+    public void testGroupByVariadicColumnsSeveralGroups() {
+        ArrayList<String> names = new ArrayList<>();
+        names.add("A");
+        names.add("B");
+        names.add("C");
+
+        ArrayList<Integer> col1 = new ArrayList<>();
+        col1.add(1);
+        col1.add(1);
+        col1.add(3);
+        col1.add(4);
+        ArrayList<Integer> col2 = new ArrayList<>();
+        col2.add(2);
+        col2.add(2);
+        col2.add(3);
+        col2.add(4);
+        ArrayList<String> col3 = new ArrayList<>();
+        col3.add("Un");
+        col3.add("Deux");
+        col3.add("Trois");
+        col3.add("Quatre");
+        List<List<? extends Comparable<?>>> l2 = new ArrayList<>();
+        l2.add(col1);
+        l2.add(col2);
+        l2.add(col3);
+
+        DataFrame data = new DataFrame(names, l2);
+
+        GroupBy g = data.groupBy("A", "B");
 
         String expected = "Grouped by [A, B]\n"
                 + "A	 B	 C	 \n"
@@ -293,7 +377,17 @@ public class GroupByTest {
         assertEquals(expected.replaceAll("\\s+", ""), defaultDataFrame.groupBy(cols).min(subCols).toString().replaceAll("\\s+", ""));
 
     }
-    
+
+    @Test
+    public void testMinVariadic() {
+        String expected = "A    min(A)  min(B)"
+                + "        1    1       6"
+                + "        2    2       5";
+
+        assertEquals(expected.replaceAll("\\s+", ""), defaultDataFrame.groupBy("A").min("A", "B").toString().replaceAll("\\s+", ""));
+
+    }
+
     @Test
     public void testMax() {
         String expected = "A    max(A)  max(B)"
@@ -305,9 +399,39 @@ public class GroupByTest {
         assertEquals(expected.replaceAll("\\s+", ""), defaultDataFrame.groupBy(cols).max(subCols).toString().replaceAll("\\s+", ""));
 
     }
+
+    @Test
+    public void testMaxVariadic() {
+        String expected = "A    max(A)  max(B)"
+                + "        1    1       8"
+                + "        2    2       5";
+
+        assertEquals(expected.replaceAll("\\s+", ""), defaultDataFrame.groupBy("A").max("A", "B").toString().replaceAll("\\s+", ""));
+
+    }
     
+    @Test
+    public void testSumVariadic() {
+        String expected = "A    sum(A)  sum(B)"
+                + "        1    1       14.0"
+                + "        2    2       5.0";
+
+        assertEquals(expected.replaceAll("\\s+", ""), defaultDataFrame.groupBy("A").sum("A", "B").toString().replaceAll("\\s+", ""));
+
+    }
+    
+     @Test
+    public void testMeanVariadic() {
+        String expected = "A    mean(A)  mean(B)"
+                + "        1    1       7.0"
+                + "        2    2       5.0";
+
+        assertEquals(expected.replaceAll("\\s+", ""), defaultDataFrame.groupBy("A").mean("A", "B").toString().replaceAll("\\s+", ""));
+
+    }
+
     @Test(expected = UnknownNameException.class)
-    public void testUnknowCol(){
+    public void testUnknowCol() {
         String[] cols = {"A"};
         String[] subCols = {"A", "FAIL"};
 

@@ -162,7 +162,7 @@ public class DataFrameTest {
         List<String> subset = new ArrayList<String>();
         subset.add("A");
         String[] subTab = {"A"};
-        
+
         assertEquals(defaultDataFrame.getColumnSubset(subset), defaultDataFrame.getColumnSubset(subTab));
     }
 
@@ -227,7 +227,7 @@ public class DataFrameTest {
 
     @Test
     public void testDisplay() {
-        
+
         /*defaultDataFrame.setDataset(new ArrayList<Column>());
         
         String expected = "Trying to print an empty dataset";
@@ -524,7 +524,7 @@ public class DataFrameTest {
 
     }
 
-    @Test (expected = IndexOutOfBoundsException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testGetLineSubsetBiggerThanPossible() {
         List<Column> actualCol = new ArrayList<>();
         List<Integer> col1 = new ArrayList<>();
@@ -894,49 +894,49 @@ public class DataFrameTest {
             assertEquals(expectedData, data);
         }
     }
-    
-    @Test (expected = NoColumnsException.class)
+
+    @Test(expected = NoColumnsException.class)
     public void testDataFrameFromEmptyLists() {
-        
+
         DataFrame data = new DataFrame(new ArrayList<String>(), new ArrayList<List<? extends Comparable<?>>>());
         //Column col = new Column("test", new ArrayList());
     }
-    
-    @Test (expected = NameAlreadyDefinedException.class)
+
+    @Test(expected = NameAlreadyDefinedException.class)
     public void testDataFrameFromRedundantLists() {
-        
+
         List<String> names = new ArrayList<String>();
         List<List<? extends Comparable<?>>> data = new ArrayList<List<? extends Comparable<?>>>();
-        
+
         names.add("A");
         data.add(new ArrayList<Comparable<?>>());
-        
+
         names.add("A");
         data.add(new ArrayList<Comparable<?>>());
-        
+
         DataFrame dataFrame = new DataFrame(names, data);
     }
-    
-    @Test (expected = ColumnsNotSameSizeException.class)
+
+    @Test(expected = ColumnsNotSameSizeException.class)
     public void testDataFrameFromDiffLists() {
-        
+
         List<String> names = new ArrayList<String>();
-        List<List<? extends Comparable<?>>> data = new ArrayList<List<? extends Comparable<?>>>();       
-        
+        List<List<? extends Comparable<?>>> data = new ArrayList<List<? extends Comparable<?>>>();
+
         names.add("A");
         ArrayList<Comparable<?>> aData = new ArrayList<Comparable<?>>();
         aData.add("koala");
-        data.add(aData);        
-        
+        data.add(aData);
+
         names.add("B");
         data.add(new ArrayList<Comparable<?>>());
-        
+
         DataFrame dataFrame = new DataFrame(names, data);
     }
-    
-    @Test (expected = ColumnsNotSameSizeException.class)
+
+    @Test(expected = ColumnsNotSameSizeException.class)
     public void testSetDataSetDiffSize() {
-        
+
         ArrayList<Column> list = new ArrayList<>();
         ArrayList<Integer> col1IntList = new ArrayList<>();
         col1IntList.add(2);
@@ -949,13 +949,13 @@ public class DataFrameTest {
         Column colB = new Column("B", col2StringList);
         list.add(colA);
         list.add(colB);
-        
+
         defaultDataFrame.setDataset(list);
     }
-    
-    @Test (expected = NameAlreadyDefinedException.class)
+
+    @Test(expected = NameAlreadyDefinedException.class)
     public void testSetDataSetSameName() {
-        
+
         ArrayList<Column> list = new ArrayList<>();
         ArrayList<Integer> col1IntList = new ArrayList<>();
         col1IntList.add(2);
@@ -968,7 +968,8 @@ public class DataFrameTest {
         Column colB = new Column("A", col2StringList);
         list.add(colA);
         list.add(colB);
-        
+
         defaultDataFrame.setDataset(list);
     }
+
 }

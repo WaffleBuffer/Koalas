@@ -92,6 +92,14 @@ public interface IDataFrame {
      */
     public String statistics();
     
+     /**
+     * 
+     * @param name1 The column where the group by has to be made
+     * @param names Other optionnal columns
+     * @return The resulting GroupBy object
+     */
+    public GroupBy groupBy(String name1, String... names);
+    
     /**
      * 
      * @param colName The column where the group by has to be made
