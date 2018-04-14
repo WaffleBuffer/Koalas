@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thekoalas.tests;
 
 import com.thekoalas.koalas.Column;
 import com.thekoalas.koalas.DataFrame;
-import com.thekoalas.koalas.GroupBy;
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,10 +10,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author medardt
- */
 public class ColumnTest {
     
     DataFrame defaultDataFrame;

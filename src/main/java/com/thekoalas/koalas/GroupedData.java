@@ -1,24 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thekoalas.koalas;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- *
- * @author GONTARD Benjamin
- */
 public class GroupedData {
 
-    private String groupId;
-    private List<String> groupNames;
-    private ArrayList<Column> columns;
-    private ArrayList<Comparable> groupValues;
+    private final String groupId;
+    private final List<String> groupNames;
+    private final ArrayList<Column> columns;
+    private final ArrayList<Comparable> groupValues;
 
     public GroupedData(String groupId, List<String> groupNames, ArrayList<Column> columns, ArrayList<Comparable> groupValues) {
         this.groupId = groupId;

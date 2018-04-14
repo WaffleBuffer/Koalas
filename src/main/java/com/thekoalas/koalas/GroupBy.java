@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thekoalas.koalas;
 
 import java.util.ArrayList;
@@ -10,10 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-/**
- *
- * @author GONTARD Benjamin
- */
 public class GroupBy {
 
     private List<String> groupNames;

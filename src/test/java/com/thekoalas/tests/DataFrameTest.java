@@ -540,7 +540,87 @@ public class DataFrameTest {
         actualCol.add(new Column("A", col1));
         DataFrame data = new DataFrame(actualCol);
 
-        assertEquals(data, data.getLineSubset(100, 100));
+        assertEquals(data, data.getLineSubset(100, 500));
+
+    }
+    
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetLineSubsetBiggerThanPossible2() {
+        List<Column> actualCol = new ArrayList<>();
+        List<Integer> col1 = new ArrayList<>();
+        col1.add(1);
+        col1.add(2);
+        col1.add(3);
+        col1.add(4);
+        col1.add(5);
+        col1.add(6);
+        col1.add(7);
+        col1.add(8);
+        col1.add(9);
+        actualCol.add(new Column("A", col1));
+        DataFrame data = new DataFrame(actualCol);
+
+        assertEquals(data, data.getLineSubset(5, 100));
+
+    }
+    
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetLineSubsetInvlidIndexes() {
+        List<Column> actualCol = new ArrayList<>();
+        List<Integer> col1 = new ArrayList<>();
+        col1.add(1);
+        col1.add(2);
+        col1.add(3);
+        col1.add(4);
+        col1.add(5);
+        col1.add(6);
+        col1.add(7);
+        col1.add(8);
+        col1.add(9);
+        actualCol.add(new Column("A", col1));
+        DataFrame data = new DataFrame(actualCol);
+
+        assertEquals(data, data.getLineSubset(100, 5));
+
+    }
+    
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetLineSubsetInvlidIndexes2() {
+        List<Column> actualCol = new ArrayList<>();
+        List<Integer> col1 = new ArrayList<>();
+        col1.add(1);
+        col1.add(2);
+        col1.add(3);
+        col1.add(4);
+        col1.add(5);
+        col1.add(6);
+        col1.add(7);
+        col1.add(8);
+        col1.add(9);
+        actualCol.add(new Column("A", col1));
+        DataFrame data = new DataFrame(actualCol);
+
+        assertEquals(data, data.getLineSubset(-1, 5));
+
+    }
+    
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetLineSubsetInvlidIndexes3() {
+        List<Column> actualCol = new ArrayList<>();
+        List<Integer> col1 = new ArrayList<>();
+        col1.add(1);
+        col1.add(2);
+        col1.add(3);
+        col1.add(4);
+        col1.add(5);
+        col1.add(6);
+        col1.add(7);
+        col1.add(8);
+        col1.add(9);
+        actualCol.add(new Column("A", col1));
+        DataFrame data = new DataFrame(actualCol);
+
+        assertEquals(data, data.getLineSubset(0, -5));
 
     }
 

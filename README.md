@@ -26,16 +26,22 @@ Finally you can use GroupBy operation (like in SQL). This will return a GroupBy
 object on which you can then apply some mathematical operations which will return
 a sub DataFrame.
 
+# Requirements
+
+- Java 8 or above
+- Maven 4 or above
+- Some kind of terminal with above softwares added in PATH
+
 # Maven use
 
 To get the library JAR file :
 
-mvn clean package
+    mvn clean package
 
-It will then be located in ./target/Koala-<Version>.jar
+It will then be located in ./target/Koala-Version.jar
 
 To run code coverage :
 
-mvn clean jacoco:prepare-agent install jacoco:report
+    mvn clean jacoco:prepare-agent install jacoco:report
 
 The report will be located in ./target/site/jacoco/index.html (open it with an internet browser)
