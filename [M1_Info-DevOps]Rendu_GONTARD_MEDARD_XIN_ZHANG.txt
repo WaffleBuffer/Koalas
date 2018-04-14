@@ -1,2 +1,14 @@
-URL:
+[M1_Info-DevOps] Rendu de TP noté
+
+URL GitHub:
 https://github.com/WaffleBuffer/Koalas
+
+URL Docker:
+Nous avons décidé de ne pas faire de Docker, notamment car notre librairie ne contient pas d'executable.
+De plus celle-ci est en Java ce qui en fait, une librairie portable.
+
+AUTHORS
+Benjamin GONTARD <benjamin.gontard2912@gmail.com>
+Thomas MEDARD <medard.thomas@outlook.fr>
+Sitan XIN <xinsitan@gmail.com>
+Naiqi ZHANG <zhangnaiqi77@gmail.com>
