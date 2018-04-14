@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/WaffleBuffer/Koalas.svg?branch=master)](https://travis-ci.org/WaffleBuffer/Koalas)
+[![Build Status](https://travis-ci.org/WaffleBuffer/Koalas.svg?branch=1.0)](https://travis-ci.org/WaffleBuffer/Koalas)
 # Koalas
 Python library Pandas implementation in Java
 
@@ -35,6 +35,11 @@ a sub DataFrame.
 # Maven use
 
 To get the library JAR file :
+
+Download : 
+https://github.com/WaffleBuffer/Koalas/releases
+
+From source code :
 
     mvn clean package
 
