@@ -6,18 +6,19 @@ Python library Pandas implementation in Java
 
 In Koala, you have two main objects : DataFrame (implements IDataFrame) and Column.
 - A DataFrame is basically a List of Column. You can compare it to a SQL Table.
-- A Column is a list of data, all the same types, that must be comparable to themself.
+- A Column is a list of data, all of the same types, that must be comparable to themself.
   You can compare it to a Column in SQL.
 - You also have the GroupBy object which is the result of a GroupBy operation
   (same operation as in SQL).
 
-You have some conveniant display features in the form of methods returning a String :
+You have some convenient display features in the form of methods returning a String :
 - display the entire DataFrame,
 - display first or last lines,
-- get some statistics about the DataFrame,
+- get some statistics about a column (minimum, maximum, sum, mean),
+- get some statistics about the whole DataFrame,
 - get the names of the columns.
 
-This library is also usefull to manage data in the form of methods.
+This library is also useful to manage data in the form of methods.
 - get some lines in the DataFrame from indexes.
 - get some columns from their names.
 - get all the data.
